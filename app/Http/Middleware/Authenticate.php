@@ -22,7 +22,7 @@ class Authenticate extends Middleware
     {
         abort(response()->json([
             'type' => 'error',
-            'message' => 'Unauthenticated.'
+            'message' => trans('errors.unauthenticated'),
         ]));
     }
 }

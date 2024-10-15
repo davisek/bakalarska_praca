@@ -33,7 +33,7 @@ class UserController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'message' => 'Profile updated successfully'
+            'message' => trans('messages.profile_updated_successfully'),
         ]);
     }
 }

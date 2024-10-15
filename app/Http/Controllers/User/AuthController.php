@@ -7,7 +7,7 @@ use App\Data\RegisterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
-use App\Http\Resources\User\MetaDataResource;
+use App\Http\Resources\EnumResources\MetaDataResource;
 use App\Http\Resources\User\UserResource;
 use App\Services\Interfaces\IAuthService;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class AuthController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'message' => 'Registration successful',
+            'message' => trans('messages.registration_successful'),
             'user' => UserResource::make(Auth::user()),
             'auth' => $token,
         ]);
@@ -45,7 +45,7 @@ class AuthController extends Controller
         if ($token) {
             return response()->json([
                 'type' => 'success',
-                'message' => 'Login successful.',
+                'message' => trans('messages.login_successful'),
                 'user' => UserResource::make(Auth::user()),
                 'auth' => $token,
             ]);
@@ -53,7 +53,7 @@ class AuthController extends Controller
 
         return response()->json([
             'type' => 'error',
-            'message' => 'Login failed. Invalid credentials.'
+            'message' => trans('errors.login_failed'),
         ]);
     }
 
@@ -63,7 +63,7 @@ class AuthController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'message' => 'Logout successful.'
+            'message' => trans('messages.logout_successful'),
         ]);
     }
 

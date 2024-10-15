@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\EnumResources;
 
 use App\Enums\Setting\SymbolEnum;
 use App\Enums\User\LocaleEnum;
@@ -17,8 +17,8 @@ class MetaDataResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'locales' => LocaleEnum::cases(),
-            'symbols' => SymbolEnum::cases(),
+            'locales' => EnumResource::collection(LocaleEnum::cases()),
+            'symbols' => EnumResource::collection(SymbolEnum::cases()),
         ];
     }
 }

@@ -33,7 +33,7 @@ class SettingController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'message' => 'Settings updated successfully'
+            'message' => trans('messages.settings_updated')
         ]);
     }
 }

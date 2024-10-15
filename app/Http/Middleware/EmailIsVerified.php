@@ -18,7 +18,7 @@ class EmailIsVerified
         if ($request->user() && is_null($request->user()->email_verified_at)) {
             return response()->json([
                 'type' => 'error',
-                'message' => 'Your email is not verified.'
+                'message' => trans('errors.email_not_verified'),
             ]);
         }
 

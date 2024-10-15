@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Http\Resources\EnumResources\EnumResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,7 +21,7 @@ class UserResource extends JsonResource
             'surname' => $this->surname,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
-            'locale' => $this->locale,
+            'locale' => EnumResource::make($this->locale),
         ];
     }
 }
