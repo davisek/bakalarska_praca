@@ -7,6 +7,7 @@ use App\Data\RegisterData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
+use App\Http\Resources\User\MetaDataResource;
 use App\Http\Resources\User\UserResource;
 use App\Services\Interfaces\IAuthService;
 use Illuminate\Http\Request;
@@ -64,5 +65,10 @@ class AuthController extends Controller
             'type' => 'success',
             'message' => 'Logout successful.'
         ]);
+    }
+
+    public function metaData()
+    {
+        return new MetaDataResource(null);
     }
 }

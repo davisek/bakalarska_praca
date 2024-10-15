@@ -16,10 +16,10 @@ class SettingResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'temperature_notification' => $this->temperature_notification,
-            'humidity_notification' => $this->humidity_notification,
-            'pressure_notification' => $this->pressure_notification,
-            'in_celsius' => $this->in_celsius,
+            'temperature_notification' => (bool)$this->temperature_notification,
+            'humidity_notification' => (bool)$this->humidity_notification,
+            'pressure_notification' => (bool)$this->pressure_notification,
+            'in_celsius' => (bool)$this->in_celsius,
         ];
     }
 }

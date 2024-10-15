@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\SensorReading\SensorReadingController;
+use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('sensor-readings')->group(function () {
     Route::get('', [SensorReadingController::class, 'show']);
     Route::get('/collection', [SensorReadingController::class, 'index']);
+    Route::get('/collection/raw', [SensorReadingController::class, 'getRawData']);
 });
 
 Route::prefix('auth')->group(function () {
@@ -26,3 +29,16 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
+Route::prefix('settings')->middleware('auth:sanctum')->group(function () {
+    Route::get('', [SettingController::class, 'show']);
+    Route::put('', [SettingController::class, 'update'])->middleware('email.verified');
+});
+
+Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+    Route::get('', [UserController::class, 'show']);
+    Route::put('', [UserController::class, 'update']);
+});
+
+Route::prefix('meta-data')->group(function () {
+    Route::get('', [AuthController::class, 'metaData']);
+});

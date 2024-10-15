@@ -39,9 +39,9 @@ class SensorReadingService implements ISensorReadingService
         $interval = floor($totalDuration / ($maxPoints - 1));
 
         $data = SensorReading::selectRaw("
-            AVG($sensor) as value,
-            MIN(created_at) as created_at
-        ")
+                AVG($sensor) as value,
+                MIN(created_at) as created_at
+            ")
             ->whereNotNull($sensor)
             ->whereBetween('created_at', [$from, $to])
             ->groupByRaw("FLOOR(UNIX_TIMESTAMP(created_at) / $interval)")
@@ -73,6 +73,24 @@ class SensorReadingService implements ISensorReadingService
 
             $data->push($newReading);
         }
+
+        return $data;
+    }
+
+    public function getRawData(string $sensor, Carbon $from, Carbon $to, int $maxPoints)
+    {
+        $data = SensorReading::select($sensor . ' as value', 'created_at')
+            ->whereNotNull($sensor)
+            ->whereBetween('created_at', [$from, $to])
+            ->get();
+
+        $data->each(function ($reading) use ($sensor) {
+            $reading->symbol = $this->getSensorSymbol($sensor);
+
+            if ($this->getSensorSymbol($sensor) == SymbolEnum::FAHRENHEIT->symbol()) {
+                $reading->value = $reading->value * (9/5) + 32;
+            }
+        });
 
         return $data;
     }

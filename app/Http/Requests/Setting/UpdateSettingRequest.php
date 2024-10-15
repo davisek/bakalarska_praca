@@ -11,7 +11,7 @@ class UpdateSettingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'temperature_notification' => ['required', 'boolean'],
+            'humidity_notification' => ['required', 'boolean'],
+            'pressure_notification' => ['required', 'boolean'],
+            'in_celsius' => ['required', 'boolean']
         ];
     }
 }

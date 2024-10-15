@@ -1,15 +1,21 @@
 <?php
 namespace App\Services;
 
-use App\Models\Setting;
+use App\Data\UserData;
 use App\Services\Interfaces\IUserService;
+use Illuminate\Support\Facades\Auth;
 
 class UserService implements IUserService
 {
-    public function get($userId)
+    public function update(UserData $userData)
     {
-        $setting = Setting::where('user_id', $userId)->first();
+        $user = Auth::user();
 
-        return $setting;
+        $user->update([
+            'name' => $userData->name,
+            'surname' => $userData->surname,
+            'email' => $userData->email,
+            'locale' => $userData->locale,
+        ]);
     }
 }

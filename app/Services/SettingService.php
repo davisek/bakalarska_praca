@@ -1,15 +1,22 @@
 <?php
 namespace App\Services;
 
+use App\Data\SettingData;
 use App\Models\Setting;
 use App\Services\Interfaces\ISettingService;
+use Illuminate\Support\Facades\Auth;
 
 class SettingService implements ISettingService
 {
-    public function show($userId)
+    public function update(SettingData $settingData)
     {
-        $setting = Setting::where('user_id', $userId)->first();
+        $user = Auth::user();
 
-        return $setting;
+        $user->setting()->update([
+            'temperature_notification' => $settingData->temperature_notification,
+            'humidity_notification' => $settingData->humidity_notification,
+            'pressure_notification' => $settingData->pressure_notification,
+            'in_celsius' => $settingData->in_celsius,
+        ]);
     }
 }

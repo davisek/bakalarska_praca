@@ -35,4 +35,15 @@ class SensorReadingController extends Controller
 
         return SensorReadingResource::collection($data);
     }
+
+    public function getRawData(SensorRequest $request)
+    {
+        $sensor = $request->validated()['sensor'];
+        $from = $request->validated()['from'] ? Carbon::parse($request->validated()['from']) : Carbon::now()->subDay();
+        $to = $request->validated()['to'] ? Carbon::parse($request->validated()['to']) : Carbon::now();
+
+        $data = $this->sensorReadingService->getRawData($sensor, $from, $to, self::NUMBER_OF_MEASURES);
+
+        return SensorReadingResource::collection($data);
+    }
 }
