@@ -49,7 +49,6 @@ class AuthService implements IAuthService
 
     public function logout(Request $request): void
     {
-
         $request->user()->tokens()->delete();
     }
 }
