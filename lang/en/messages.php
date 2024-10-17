@@ -8,4 +8,5 @@ return [
     'profile_updated_successfully' => 'Profile updated successfully.',
     'verification_code_resent' => 'Verification code resent successfully.',
     'email_verified' => 'Your email has been successfully verified.',
+    'password_updated_successfully' => 'Your password has been updated successfully.',
 ];

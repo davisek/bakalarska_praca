@@ -7,5 +7,6 @@ return [
     'logout_successful' => 'Odhlásenie bolo úspešné.',
     'profile_updated_successfully' => 'Profil bol úspešne aktualizovaný.',
     'verification_code_resent' => 'Overovací kód bol úspešne poslaný.',
-    'email_verified' => 'Tvoj email bol úspešne overený.',
+    'email_verified' => 'Váš email bol úspešne overený.',
+    'password_updated_successfully' => 'Vaše heslo bolo úspešne zmenené.',
 ];

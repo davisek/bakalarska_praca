@@ -36,7 +36,8 @@ class User extends Authenticatable
         'surname',
         'email',
         'password',
-        'locale'
+        'locale',
+        'is_admin'
     ];
 
     protected $hidden = [

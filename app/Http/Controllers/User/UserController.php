@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Data\UserData;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\User\UserResource;
 use App\Services\Interfaces\IUserService;
@@ -34,6 +35,20 @@ class UserController extends Controller
         return response()->json([
             'type' => 'success',
             'message' => trans('messages.profile_updated_successfully'),
+        ]);
+    }
+
+    public function changePassword(UpdatePasswordRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->update([
+            'password' => $request->validated()['password'],
+        ]);
+
+        return response()->json([
+            'type' => 'success',
+            'message' => trans('messages.password_updated_successfully'),
         ]);
     }
 }
