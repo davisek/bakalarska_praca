@@ -19,7 +19,7 @@ class AuthService implements IAuthService
     public function register(RegisterData $registerData): array
     {
         $hash = Str::random(150);
-        $verification_code = rand(10000, 99999);
+        $verification_code = (string)rand(10000, 99999);
 
         $user = User::create([
             'name' => $registerData->name,
@@ -45,6 +45,7 @@ class AuthService implements IAuthService
         Mail::to($user->email)->send(new VerificationEmail($hash, $verification_code, $user->name . ' ' . $user->surname));
 
         return [
+            'user' => $user,
             'token' => $token,
             'verification_code' => $verification_code,
         ];
@@ -97,7 +98,7 @@ class AuthService implements IAuthService
     {
         $cachedData = Cache::store('file')->get($verificationData->hash);
 
-        if (!$cachedData || $cachedData['verification_code'] !== $verificationData->verification_code) {
+        if (!$cachedData || $cachedData['verification_code'] != $verificationData->verification_code) {
             return [
                 'type' => 'error',
                 'message_code' => 'errors.verification_failed'

@@ -29,13 +29,13 @@ class AuthController extends Controller
         $registerData = RegisterData::from($request->validated());
 
         $data = $this->authService->register($registerData);
-        dd(Auth::user());
+
         return response()->json([
             'type' => 'success',
             'message' => trans('messages.registration_successful'),
-            'user' => UserResource::make(Auth::user()),
+            'user' => UserResource::make($data['user']),
             'auth' => $data['token'],
-            'verification_code' => env('APP_DEBUG') ? $data['verification_code'] : null,
+            'verification_code' => $data['verification_code'],
         ]);
     }
 
@@ -84,7 +84,7 @@ class AuthController extends Controller
         return response()->json([
             'type' => 'success',
             'message' => trans('messages.verification_code_resent'),
-            'verification_code' => env('APP_DEBUG') ? $verificationCode : null,
+            'verification_code' => $verificationCode,
         ]);
     }
 
