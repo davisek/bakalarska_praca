@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'surname' => $this->surname,
             'email' => $this->email,
-            'email_verified_at' => $this->email_verified_at,
+            'email_verified_at' => $this->email_verified_at ?? null,
             'locale' => EnumResource::make($this->locale),
         ];
     }

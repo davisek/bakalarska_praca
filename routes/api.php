@@ -27,6 +27,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/resend-code', [AuthController::class, 'resendVerificationCode'])->middleware('auth:sanctum');
+    Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
 });
 
 Route::prefix('settings')->middleware('auth:sanctum')->group(function () {
@@ -37,6 +39,7 @@ Route::prefix('settings')->middleware('auth:sanctum')->group(function () {
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::get('', [UserController::class, 'show']);
     Route::put('', [UserController::class, 'update']);
+    Route::put('/change-password', [UserController::class, 'changePassword']);
 });
 
 Route::prefix('meta-data')->group(function () {

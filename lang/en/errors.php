@@ -4,4 +4,8 @@ return [
     'login_failed' => 'Login failed. Invalid credentials.',
     'email_not_verified' => 'Your email is not verified.',
     'unauthenticated' => 'Unauthenticated.',
+    'already_verified' => 'Your email is already verified.',
+    'user_not_found' => 'User not found.',
+    'verification_failed' => 'Verification failed. The code or hash is invalid.',
+
 ];

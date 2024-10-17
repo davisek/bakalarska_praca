@@ -4,7 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Data\LoginData;
 use App\Data\RegisterData;
+use App\Data\VerificationData;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\EmailVerificationRequest;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Resources\EnumResources\MetaDataResource;
@@ -26,13 +28,14 @@ class AuthController extends Controller
     {
         $registerData = RegisterData::from($request->validated());
 
-        $token = $this->authService->register($registerData);
-
+        $data = $this->authService->register($registerData);
+        dd(Auth::user());
         return response()->json([
             'type' => 'success',
             'message' => trans('messages.registration_successful'),
             'user' => UserResource::make(Auth::user()),
-            'auth' => $token,
+            'auth' => $data['token'],
+            'verification_code' => env('APP_DEBUG') ? $data['verification_code'] : null,
         ]);
     }
 
@@ -64,6 +67,36 @@ class AuthController extends Controller
         return response()->json([
             'type' => 'success',
             'message' => trans('messages.logout_successful'),
+        ]);
+    }
+
+    public function resendVerificationCode()
+    {
+        if (!is_null(Auth::user()->email_verified_at)) {
+            return response()->json([
+                'type' => 'error',
+                'message' => trans('errors.already_verified'),
+            ]);
+        }
+
+        $verificationCode = $this->authService->resendVerificationCode();
+
+        return response()->json([
+            'type' => 'success',
+            'message' => trans('messages.verification_code_resent'),
+            'verification_code' => env('APP_DEBUG') ? $verificationCode : null,
+        ]);
+    }
+
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        $verificationData = VerificationData::from($request->validated());
+
+        $response = $this->authService->verifyEmail($verificationData);
+
+        return response()->json([
+            'type' => $response['type'],
+            'message' => trans($response['message_code']),
         ]);
     }
 

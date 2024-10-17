@@ -11,6 +11,11 @@ class UserService implements IUserService
     {
         $user = Auth::user();
 
+        if ($user->email !== $userData->email) {
+            $user->email_verified_at = null;
+            $user->save();
+        }
+
         $user->update([
             'name' => $userData->name,
             'surname' => $userData->surname,
