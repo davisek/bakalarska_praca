@@ -35,47 +35,48 @@ class SensorReadingService implements ISensorReadingService
 
     public function index(string $sensor, Carbon $from, Carbon $to, int $maxPoints)
     {
-        $totalDuration = $to->timestamp - $from->timestamp;
-        $interval = floor($totalDuration / ($maxPoints - 1));
+        $from = $from->startOfDay();
+        $to = $to->endOfDay();
 
-        $data = SensorReading::selectRaw("
-                AVG($sensor) as value,
-                MIN(created_at) as created_at
-            ")
+        $data = SensorReading::select($sensor, 'created_at')
             ->whereNotNull($sensor)
             ->whereBetween('created_at', [$from, $to])
-            ->groupByRaw("FLOOR(UNIX_TIMESTAMP(created_at) / $interval)")
+            ->orderBy('created_at')
             ->get();
 
-        $data->each(function ($reading) use ($sensor) {
-            $reading->symbol = $this->getSensorSymbol($sensor);
+        $totalCount = $data->count();
 
-            if ($this->getSensorSymbol($sensor) == SymbolEnum::FAHRENHEIT->symbol()) {
-                $reading->value = $reading->value * (9/5) + 32;
-            }
-        });
-
-        $lastReading = SensorReading::select($sensor, 'created_at')
-            ->whereNotNull($sensor)
-            ->where('created_at', '<=', $to)
-            ->latest('created_at')
-            ->first();
-
-        $exists = $data->contains(function ($reading) use ($lastReading) {
-            return $reading->created_at->toDateString() === $lastReading->created_at->toDateString();
-        });
-
-        if ($lastReading && !$exists) {
-            $newReading = new SensorReading();
-            $newReading->value = $lastReading->$sensor;
-            $newReading->created_at = $lastReading->created_at;
-            $newReading->symbol = $this->getSensorSymbol($sensor);
-
-            $data->push($newReading);
+        if ($totalCount <= $maxPoints) {
+            return $data->map(function ($reading) use ($sensor) {
+                return [
+                    'value' => $reading->$sensor,
+                    'created_at' => $reading->created_at,
+                    'symbol' => $this->getSensorSymbol($sensor),
+                ];
+            });
         }
 
-        return $data;
+        $intervalSize = $totalCount / $maxPoints;
+        $result = collect();
+
+        for ($i = 0; $i < $maxPoints; $i++) {
+            $startIndex = floor($i * $intervalSize);
+            $intervalData = $data->slice($startIndex, ceil($intervalSize));
+
+            $averageValue = $intervalData->avg($sensor);
+            $firstTimestamp = $intervalData->first()->created_at;
+
+            $result->push([
+                'value' => $averageValue,
+                'created_at' => $firstTimestamp,
+                'symbol' => $this->getSensorSymbol($sensor),
+            ]);
+        }
+
+        return $result;
     }
+
+
 
     public function getRawData(string $sensor, Carbon $from, Carbon $to, int $maxPoints)
     {
