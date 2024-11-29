@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SensorReading\MetaDataController;
 use App\Http\Controllers\SensorReading\SensorReadingController;
 use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\User\AuthController;
@@ -18,9 +19,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('sensor-readings')->group(function () {
-    Route::get('', [SensorReadingController::class, 'show']);
-    Route::get('/collection', [SensorReadingController::class, 'index']);
-    Route::get('/collection/raw', [SensorReadingController::class, 'getRawData']);
+    Route::get('{sensor}', [SensorReadingController::class, 'show']);
+    Route::get('/collection/{sensor}', [SensorReadingController::class, 'index']);
+    Route::get('/collection/{sensor}/raw', [SensorReadingController::class, 'getRawData']);
+    Route::post('', [SensorReadingController::class, 'create']);
 });
 
 Route::prefix('auth')->group(function () {
@@ -43,5 +45,7 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 });
 
 Route::prefix('meta-data')->group(function () {
-    Route::get('', [AuthController::class, 'metaData']);
+    Route::get('', [MetaDataController::class, 'metaData']);
+    Route::get('groups', [MetaDataController::class, 'sensorGroups']);
+    Route::get('sensors/{sensorGroup}', [MetaDataController::class, 'sensors']);
 });

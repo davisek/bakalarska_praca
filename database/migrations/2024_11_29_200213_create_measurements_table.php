@@ -8,17 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('sensor_readings', function (Blueprint $table) {
+        Schema::create('measurements', function (Blueprint $table) {
             $table->id();
-            $table->float('temperature')->nullable();
-            $table->float('humidity')->nullable();
-            $table->float('pressure')->nullable();
+            $table->foreignId('sensor_id')->constrained('sensors')->onDelete('cascade');
+            $table->float('value')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('sensor_readings');
+        Schema::dropIfExists('measurements');
     }
 };

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @Model Setting
+ * @property int $id
  * @property int $user_id
  * @property boolean $temperature_notification
  * @property boolean $humidity_notification

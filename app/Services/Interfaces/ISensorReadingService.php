@@ -2,12 +2,16 @@
 namespace App\Services\Interfaces;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 interface ISensorReadingService
 {
-    public function show(string $sensor);
+    public function show(string $sensor_name): Model;
 
-    public function index(string $sensor, Carbon $from, Carbon $to, int $maxPoints);
+    public function index(string $sensor_name, Carbon $from, Carbon $to, int $maxPoints): Collection;
 
-    public function getRawData(string $sensor, Carbon $from, Carbon $to, int $maxPoints);
+    public function getRawData(string $sensor_name, Carbon $from, Carbon $to, int $maxPoints): Collection;
+
+    public function create(array $data);
 }

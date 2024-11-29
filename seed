@@ -1,0 +1,22 @@
+
+   Symfony\Component\Process\Exception\RuntimeException 
+
+  TTY mode is not supported on Windows platform.
+
+  at vendor\symfony\process\Process.php:1018
+    [90m1014[0m[90m▕ [0m[90;3m     */[0m
+    [90m1015[0m[90m▕ [0m[90;3m    [0m[35;1mpublic function [0m[39;1msetTty[0m[35;1m([0m[39;1mbool $tty[0m[35;1m): static[0m
+    [90m1016[0m[90m▕ [0m[35;1m    {[0m
+    [90m1017[0m[90m▕ [0m[35;1m        if ([0m[37m'\\' [0m[35;1m=== \DIRECTORY_SEPARATOR && [0m[39;1m$tty[0m[35;1m) {[0m
+[31;1m  ➜ [0m[3;1m1018[0m[90m▕ [0m[35;1m            throw new [0m[39;1mRuntimeException[0m[35;1m([0m[37m'TTY mode is not supported on Windows platform.'[0m[35;1m);[0m
+    [90m1019[0m[90m▕ [0m[35;1m        }[0m
+    [90m1020[0m[90m▕ [0m
+    [90m1021[0m[90m▕ [0m[35;1m        if ([0m[39;1m$tty [0m[35;1m&& ![0m[39;1mself[0m[35;1m::[0m[39;1misTtySupported[0m[35;1m()) {[0m
+    [90m1022[0m[90m▕ [0m[35;1m            throw new [0m[39;1mRuntimeException[0m[35;1m([0m[37m'TTY mode requires /dev/tty to be read/writable.'[0m[35;1m);[0m
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Console\DbCommand.php:49
+      Symfony\Component\Process\Process::setTty()
+
+  2   vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:36
+      Illuminate\Database\Console\DbCommand::handle()
+

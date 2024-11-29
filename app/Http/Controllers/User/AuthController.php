@@ -99,9 +99,4 @@ class AuthController extends Controller
             'message' => trans($response['message_code']),
         ]);
     }
-
-    public function metaData()
-    {
-        return new MetaDataResource(null);
-    }
 }
