@@ -9,9 +9,9 @@ interface ISensorReadingService
 {
     public function show(string $sensor_name): Model;
 
-    public function index(string $sensor_name, Carbon $from, Carbon $to, int $maxPoints): Collection;
+    public function index(string $sensor_name, ?Carbon $from, Carbon $to, int $maxPoints): Collection;
 
-    public function getRawData(string $sensor_name, Carbon $from, Carbon $to, int $maxPoints): Collection;
+    public function getRawData(string $sensor_name, ?Carbon $from, Carbon $to, int $maxPoints): Collection;
 
     public function create(array $data);
 }

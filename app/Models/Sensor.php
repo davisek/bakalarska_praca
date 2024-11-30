@@ -46,4 +46,9 @@ class Sensor extends Model
     {
         return $this->belongsTo(SensorGroup::class, 'sensor_group_id');
     }
+
+    public function notificationSettings(): HasMany
+    {
+        return $this->hasMany(NotificationSetting::class, 'sensor_id');
+    }
 }

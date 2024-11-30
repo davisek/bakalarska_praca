@@ -24,9 +24,9 @@ class SensorReadingService implements ISensorReadingService
         return $data;
     }
 
-    public function index(string $sensor_name, Carbon $from, Carbon $to, int $maxPoints): Collection
+    public function index(string $sensor_name, ?Carbon $from, Carbon $to, int $maxPoints): Collection
     {
-        $from = $from->startOfDay();
+        $from = $from ? $from->startOfDay() : Carbon::createFromDate(1970, 1, 1);
         $to = $to->endOfDay();
 
         $sensor = Sensor::where('type', $sensor_name)->first();
@@ -74,8 +74,11 @@ class SensorReadingService implements ISensorReadingService
     }
 
 
-    public function getRawData(string $sensor_name, Carbon $from, Carbon $to, int $maxPoints): Collection
+    public function getRawData(string $sensor_name, ?Carbon $from, Carbon $to, int $maxPoints): Collection
     {
+        $from = $from ? $from->startOfDay() : Carbon::createFromDate(1970, 1, 1);
+        $to = $to->endOfDay();
+
         $sensor = Sensor::where('type', $sensor_name)->first();
 
         $data = Measurement::with('sensor')

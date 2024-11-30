@@ -2,7 +2,7 @@
 namespace App\Services;
 
 use App\Data\SettingData;
-use App\Models\Setting;
+use App\Models\NotificationSetting;
 use App\Services\Interfaces\ISettingService;
 use Illuminate\Support\Facades\Auth;
 

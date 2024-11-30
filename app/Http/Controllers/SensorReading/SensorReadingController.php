@@ -11,7 +11,7 @@ use Carbon\Carbon;
 
 class SensorReadingController extends Controller
 {
-    protected const NUMBER_OF_MEASURES = 24;
+    protected const NUMBER_OF_MEASURES = 40;
     protected readonly ISensorReadingService $sensorReadingService;
 
     public function __construct(ISensorReadingService $sensorReadingService)
@@ -28,8 +28,11 @@ class SensorReadingController extends Controller
 
     public function index(string $sensor, SensorRequestQuery $request)
     {
-        $from = $request->validated()['from'] ? Carbon::parse($request->validated()['from']) : Carbon::now()->subDay();
-        $to = $request->validated()['to'] ? Carbon::parse($request->validated()['to']) : Carbon::now();
+        $validated = $request->validated();
+        $to = isset($validated['to']) ? Carbon::parse($validated['to']) : Carbon::now();
+        $from = isset($validated['from'])
+            ? Carbon::parse($validated['from'])
+            : null;
 
         $data = $this->sensorReadingService->index($sensor, $from, $to, self::NUMBER_OF_MEASURES);
 
@@ -38,8 +41,11 @@ class SensorReadingController extends Controller
 
     public function getRawData(string $sensor, SensorRequestQuery $request)
     {
-        $from = $request->validated()['from'] ? Carbon::parse($request->validated()['from']) : Carbon::now()->subDay();
-        $to = $request->validated()['to'] ? Carbon::parse($request->validated()['to']) : Carbon::now();
+        $validated = $request->validated();
+        $to = isset($validated['to']) ? Carbon::parse($validated['to']) : Carbon::now();
+        $from = isset($validated['from'])
+            ? Carbon::parse($validated['from'])
+            : null;
 
         $data = $this->sensorReadingService->getRawData($sensor, $from, $to, self::NUMBER_OF_MEASURES);
 

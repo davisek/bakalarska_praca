@@ -16,8 +16,8 @@ class SensorRequestQuery extends FormRequest
     public function rules(): array
     {
         return [
-            'from' => ['nullable', 'date'],
-            'to' => ['nullable', 'date', 'after_or_equal:from'],
+            'from' => ['nullable', 'date', 'before_or_equal:now'],
+            'to' => ['nullable', 'date', 'after_or_equal:from', 'before_or_equal:now'],
         ];
     }
 }
