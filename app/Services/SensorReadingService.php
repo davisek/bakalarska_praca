@@ -6,10 +6,13 @@ use App\Models\Sensor;
 use App\Services\Interfaces\ISensorReadingService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class SensorReadingService implements ISensorReadingService
 {
+    const PER_PAGE = 20;
+
     public function show(string $sensor_name): Model
     {
         $sensor = Sensor::where('type', $sensor_name)->first();
@@ -74,21 +77,35 @@ class SensorReadingService implements ISensorReadingService
     }
 
 
-    public function getRawData(string $sensor_name, ?Carbon $from, Carbon $to, int $maxPoints): Collection
+    public function getRawData(string $sensor_name, array $validatedRequest): LengthAwarePaginator
     {
-        $from = $from ? $from->startOfDay() : Carbon::createFromDate(1970, 1, 1);
-        $to = $to->endOfDay();
+        $to = isset($validatedRequest['to']) ? Carbon::parse($validatedRequest['to'])->endOfDay() : Carbon::now();
+        $from = isset($validatedRequest['from'])
+            ? Carbon::parse($validatedRequest['from'])->startOfDay()
+            : Carbon::createFromDate(1970, 1, 1);
 
         $sensor = Sensor::where('type', $sensor_name)->first();
 
-        $data = Measurement::with('sensor')
+        if (!$sensor) {
+            return collect();
+        }
+
+        $query = Measurement::with('sensor')
             ->select('sensor_id', 'value', 'created_at')
             ->where('sensor_id', $sensor->id)
             ->whereNotNull('value')
-            ->whereBetween('created_at', [$from, $to])
-            ->get();
+            ->whereBetween('created_at', [$from, $to]);
 
-        return $data;
+        if (isset($validatedRequest['sort']) && is_array($validatedRequest['sort'])) {
+            foreach ($validatedRequest['sort'] as $sort) {
+                if (!empty($sort['field']) && !empty($sort['direction'])) {
+                    $query->orderBy($sort['field'], $sort['direction']);
+                }
+            }
+        }
+
+        $perPage = $validatedRequest['per_page'] ?? self::PER_PAGE;
+        return $query->paginate($perPage);
     }
 
     public function create(array $data)

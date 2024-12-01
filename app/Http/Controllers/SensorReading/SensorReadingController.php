@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SensorReading;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SensorReading\SensorCreateRequest;
+use App\Http\Requests\SensorReading\SensorRawRequestQuery;
 use App\Http\Requests\SensorReading\SensorRequestQuery;
 use App\Http\Resources\SensorReading\SensorReadingResource;
 use App\Services\Interfaces\ISensorReadingService;
@@ -39,15 +40,10 @@ class SensorReadingController extends Controller
         return SensorReadingResource::collection($data);
     }
 
-    public function getRawData(string $sensor, SensorRequestQuery $request)
+    public function getRawData(string $sensor, SensorRawRequestQuery $request)
     {
-        $validated = $request->validated();
-        $to = isset($validated['to']) ? Carbon::parse($validated['to']) : Carbon::now();
-        $from = isset($validated['from'])
-            ? Carbon::parse($validated['from'])
-            : null;
-
-        $data = $this->sensorReadingService->getRawData($sensor, $from, $to, self::NUMBER_OF_MEASURES);
+        $validatedRequest = $request->validated();
+        $data = $this->sensorReadingService->getRawData($sensor, $validatedRequest);
 
         return SensorReadingResource::collection($data);
     }
