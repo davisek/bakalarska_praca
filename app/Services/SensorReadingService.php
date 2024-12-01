@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 
 class SensorReadingService implements ISensorReadingService
 {
-    const PER_PAGE = 20;
+    const PER_PAGE = 15;
 
     public function show(string $sensor_name): Model
     {
@@ -83,12 +83,9 @@ class SensorReadingService implements ISensorReadingService
         $from = isset($validatedRequest['from'])
             ? Carbon::parse($validatedRequest['from'])->startOfDay()
             : Carbon::createFromDate(1970, 1, 1);
+        $perPage = $validatedRequest['per_page'] ?? self::PER_PAGE;
 
         $sensor = Sensor::where('type', $sensor_name)->first();
-
-        if (!$sensor) {
-            return collect();
-        }
 
         $query = Measurement::with('sensor')
             ->select('sensor_id', 'value', 'created_at')
@@ -96,6 +93,9 @@ class SensorReadingService implements ISensorReadingService
             ->whereNotNull('value')
             ->whereBetween('created_at', [$from, $to]);
 
+        if (empty($query)) {
+            return $query->paginate($perPage);
+        }
         if (isset($validatedRequest['sort']) && is_array($validatedRequest['sort'])) {
             foreach ($validatedRequest['sort'] as $sort) {
                 if (!empty($sort['field']) && !empty($sort['direction'])) {
@@ -104,7 +104,6 @@ class SensorReadingService implements ISensorReadingService
             }
         }
 
-        $perPage = $validatedRequest['per_page'] ?? self::PER_PAGE;
         return $query->paginate($perPage);
     }
 
