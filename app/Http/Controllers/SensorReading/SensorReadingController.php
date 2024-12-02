@@ -30,10 +30,12 @@ class SensorReadingController extends Controller
     public function index(string $sensor, SensorRequestQuery $request)
     {
         $validated = $request->validated();
-        $to = isset($validated['to']) ? Carbon::parse($validated['to']) : Carbon::now();
+        $to = isset($validated['to'])
+            ? Carbon::parse($validated['to'])
+            : Carbon::now('Europe/Bratislava');
         $from = isset($validated['from'])
-            ? Carbon::parse($validated['from'])
-            : null;
+            ? Carbon::parse($validated['from'],'Europe/Bratislava')
+            : Carbon::createFromDate(1970, 1, 1, 'Europe/Bratislava');
 
         $data = $this->sensorReadingService->index($sensor, $from, $to, self::NUMBER_OF_MEASURES);
 

@@ -29,7 +29,7 @@ class SensorReadingService implements ISensorReadingService
 
     public function index(string $sensor_name, ?Carbon $from, Carbon $to, int $maxPoints): Collection
     {
-        $from = $from ? $from->startOfDay() : Carbon::createFromDate(1970, 1, 1);
+        $from = $from ?: Carbon::createFromDate(1970, 1, 1);
         $to = $to->endOfDay();
 
         $sensor = Sensor::where('type', $sensor_name)->first();
@@ -79,10 +79,13 @@ class SensorReadingService implements ISensorReadingService
 
     public function getRawData(string $sensor_name, array $validatedRequest): LengthAwarePaginator
     {
-        $to = isset($validatedRequest['to']) ? Carbon::parse($validatedRequest['to'])->endOfDay() : Carbon::now();
+        $to = isset($validatedRequest['to'])
+            ? Carbon::parse($validatedRequest['to'], 'Europe/Bratislava')->endOfDay()
+            : Carbon::now('Europe/Bratislava');
         $from = isset($validatedRequest['from'])
-            ? Carbon::parse($validatedRequest['from'])->startOfDay()
-            : Carbon::createFromDate(1970, 1, 1);
+            ? Carbon::parse($validatedRequest['from'], 'Europe/Bratislava')
+            : Carbon::createFromDate(1970, 1, 1, 'Europe/Bratislava');
+
         $perPage = $validatedRequest['per_page'] ?? self::PER_PAGE;
 
         $sensor = Sensor::where('type', $sensor_name)->first();
@@ -111,7 +114,7 @@ class SensorReadingService implements ISensorReadingService
     {
         $sensor = Sensor::where('type', $data['sensor_name'])->first();
 
-        $timestamp = Carbon::now('Europe/Bratislava');
+        $timestamp = Carbon::now();
 
         Measurement::create([
             'sensor_id' => $sensor->id,
