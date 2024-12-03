@@ -13,7 +13,6 @@ class MetaDataResource extends JsonResource
     {
         return [
             'locales' => EnumResource::collection(LocaleEnum::cases()),
-            'symbols' => EnumResource::collection(SymbolEnum::cases()),
         ];
     }
 }

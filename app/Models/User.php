@@ -59,9 +59,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(NotificationSetting::class, 'user_id');
     }
-
-    public function getTemperatureSymbol()
-    {
-        return $this->setting->in_celsius ? SymbolEnum::CELSIUS->symbol() : SymbolEnum::FAHRENHEIT->symbol();
-    }
 }
