@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\SensorReading;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SensorReading\SensorCreateRequest;
+use App\Http\Requests\SensorReading\SensorReadingCreateRequest;
 use App\Http\Requests\SensorReading\SensorRawRequestQuery;
 use App\Http\Requests\SensorReading\SensorRequestQuery;
 use App\Http\Resources\SensorReading\SensorReadingResource;
@@ -55,7 +55,7 @@ class SensorReadingController extends Controller
         ]);
     }
 
-    public function create(SensorCreateRequest $request)
+    public function create(SensorReadingCreateRequest $request)
     {
         $this->sensorReadingService->create($request->validated());
 

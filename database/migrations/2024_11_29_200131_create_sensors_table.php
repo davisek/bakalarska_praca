@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('display_name', 50)->nullable();
             $table->string('unit_of_measurement', 10)->nullable();
             $table->string('image_path')->nullable();
+            $table->string('icon_path')->nullable();
             $table->foreignId('sensor_group_id')->constrained('sensor_groups')->onDelete('cascade');
             $table->timestamps();
         });

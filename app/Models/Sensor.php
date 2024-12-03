@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
  * @property string $type
  * @property string $unit_of_measurement
  * @property string $image_path
+ * @property string $icon_path
  * @property int $sensor_group_id
  * @property Carbon|Null $created_at
  * @property Carbon|Null $updated_at
@@ -34,6 +35,7 @@ class Sensor extends Model
         'display_name',
         'unit_of_measurement',
         'image_path',
+        'icon_path',
         'sensor_group_id',
     ];
 

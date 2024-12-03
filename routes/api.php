@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\SensorReading\MetaDataController;
+use App\Http\Controllers\Sensor\SensorController;
+use App\Http\Controllers\SensorGroup\SensorGroupController;
 use App\Http\Controllers\SensorReading\SensorReadingController;
 use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\User\AuthController;
@@ -44,8 +45,14 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::put('/change-password', [UserController::class, 'changePassword']);
 });
 
-Route::prefix('meta-data')->group(function () {
-    Route::get('', [MetaDataController::class, 'metaData']);
-    Route::get('groups', [MetaDataController::class, 'sensorGroups']);
-    Route::get('sensors/{sensorGroup}', [MetaDataController::class, 'sensors']);
+Route::prefix('sensor-groups')->group(function () {
+    Route::get('', [SensorGroupController::class, 'index']);
+    Route::get('meta-data', [SensorGroupController::class, 'metaData']);
+    Route::get('{sensorGroupId}', [SensorGroupController::class, 'show']);
+    Route::post('{sensorGroupId}', [SensorGroupController::class, 'update']);
+});
+
+Route::prefix('sensors')->group(function () {
+    Route::get('{sensorId}', [SensorController::class, 'show']);
+    Route::post('{sensorId}', [SensorController::class, 'update']);
 });

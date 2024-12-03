@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
  * @property int $id
  * @property string $group_name
  * @property string $group_value
+ * @property string $image_path
  * @property Carbon|Null $created_at
  * @property Carbon|Null $updated_at
  * @property Collection|Sensor[] $sensors
@@ -26,6 +27,7 @@ class SensorGroup extends Model
     protected $fillable = [
         'group_name',
         'group_value',
+        'image_path',
     ];
 
     public function sensors(): HasMany
