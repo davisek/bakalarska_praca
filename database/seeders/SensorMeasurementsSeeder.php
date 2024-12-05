@@ -12,9 +12,9 @@ class SensorMeasurementsSeeder extends Seeder
 {
     public function run(): void
     {
-        $assetPathGroupImage = resource_path('Assets/sensor-group-images');
-        $assetPathSensorImage = resource_path('Assets/sensor-images');
-        $assetPathSensorIcon = resource_path('Assets/sensor-icons');
+        $assetPathGroupImage = resource_path('assets/sensor-group-images');
+        $assetPathSensorImage = resource_path('assets/sensor-images');
+        $assetPathSensorIcon = resource_path('assets/sensor-icons');
 
         $commonGroup = SensorGroup::create([
             'group_name' => 'Common',
