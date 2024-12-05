@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('sensors', function (Blueprint $table) {
             $table->id();
             $table->string('sensor_name', 50)->nullable();
-            $table->string('type', 50)->nullable();
-            $table->string('display_name', 50)->nullable();
+            $table->string('type', 50)->unique();
+            $table->string('display_name', 50)->unique();
             $table->string('unit_of_measurement', 10)->nullable();
             $table->string('image_path')->nullable();
             $table->string('icon_path')->nullable();

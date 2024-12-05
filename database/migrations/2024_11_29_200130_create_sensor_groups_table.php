@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('sensor_groups', function (Blueprint $table) {
             $table->id();
-            $table->string('group_name', 50)->nullable();
-            $table->string('group_value', 50)->nullable();
+            $table->string('group_name', 50)->unique();
+            $table->string('group_value', 50)->unique();
             $table->string('image_path')->nullable();
             $table->timestamps();
         });
