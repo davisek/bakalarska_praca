@@ -19,7 +19,7 @@ class SensorUpdateRequest extends FormRequest
         return [
             'sensor_name' => ['required', 'string'],
             'type' => ['required', 'string', Rule::unique('sensors', 'type')->ignore($sensorId)],
-            'display_name' => ['required', 'string'],
+            'display_name' => ['required', 'string', Rule::unique('sensors', 'display_name')->ignore($sensorId)],
             'unit_of_measurement' => ['required', 'string'],
             'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'icon' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif', 'max:2048'],

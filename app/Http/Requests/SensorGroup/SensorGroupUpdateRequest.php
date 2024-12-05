@@ -17,7 +17,7 @@ class SensorGroupUpdateRequest extends FormRequest
         $sensorGroupId = $this->route('sensorGroupId');
 
         return [
-            'group_name' => ['required', 'string'],
+            'group_name' => ['required', 'string', Rule::unique('sensor_groups', 'group_name')->ignore($sensorGroupId)],
             'group_value' => ['required', 'string', Rule::unique('sensor_groups', 'group_value')->ignore($sensorGroupId)],
             'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
