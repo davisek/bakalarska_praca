@@ -22,7 +22,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $hash
  * @property string $locale
  * @property boolean $is_admin
- * @property boolean $in_celsius
  * @property Carbon|Null $created_at
  * @property Carbon|Null $updated_at
  * @property Collection|NotificationSetting[] $notificationSettings
@@ -40,7 +39,6 @@ class User extends Authenticatable
         'password',
         'locale',
         'is_admin',
-        'in_celsius',
     ];
 
     protected $hidden = [
@@ -51,7 +49,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'in_celsius' => 'boolean',
         'locale' => LocaleEnum::class
     ];
 

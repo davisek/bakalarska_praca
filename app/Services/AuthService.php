@@ -31,10 +31,6 @@ class AuthService implements IAuthService
             'hash' => $hash,
         ]);
 
-        $user->setting()->update([
-            'in_celsius' => $registerData->symbol == SymbolEnum::CELSIUS->value,
-        ]);
-
         $token = $user->createToken('auth_token')->plainTextToken;
 
         Cache::store("file")->put($hash, [

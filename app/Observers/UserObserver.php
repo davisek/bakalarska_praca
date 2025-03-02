@@ -11,12 +11,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        $user->setting()->create([
-            'temperature_notification' => false,
-            'humidity_notification' => false,
-            'pressure_notification' => false,
-            'in_celsius' => true,
-        ]);
+
     }
 
     /**

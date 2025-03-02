@@ -30,7 +30,6 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'locale' => ['required', 'string', Rule::in(LocaleEnum::cases())],
-            'symbol' => ['required', 'string', Rule::in(SymbolEnum::cases())],
         ];
     }
 }
