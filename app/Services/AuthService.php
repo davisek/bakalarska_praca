@@ -8,11 +8,13 @@ use App\Enums\Setting\SymbolEnum;
 use App\Mail\VerificationEmail;
 use App\Models\User;
 use App\Services\Interfaces\IAuthService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthService implements IAuthService
 {
@@ -31,8 +33,6 @@ class AuthService implements IAuthService
             'hash' => $hash,
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         Cache::store("file")->put($hash, [
             "email" => $user->email,
             "verification_code" => $verification_code ,
@@ -42,30 +42,22 @@ class AuthService implements IAuthService
 
         return [
             'user' => $user,
-            'token' => $token,
             'verification_code' => $verification_code,
         ];
     }
 
-    public function login(LoginData $loginData): ?string
+    public function login(LoginData $loginData): ?array
     {
-        if (Auth::attempt([
-            'email' => $loginData->email,
-            'password' => $loginData->password,
-        ])) {
-            $user = Auth::user();
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            return $token;
+        if (!$token = Auth::guard('api')->attempt($loginData->toArray())) {
+            return null;
         }
 
-        return null;
+        return $this->createNewToken($token);
     }
 
     public function logout(Request $request): void
     {
-        $request->user()->tokens()->delete();
+        JWTAuth::invalidate(JWTAuth::getToken());
     }
 
     public function resendVerificationCode(): string
@@ -125,6 +117,24 @@ class AuthService implements IAuthService
         return [
             'type' => 'success',
             'message_code' => 'messages.email_verified'
+        ];
+    }
+
+    public function refresh(): array
+    {
+        $token = Auth::guard('api')->refresh();
+
+        return [
+            'access_token' => $token,
+            'user' => Auth::guard('api')->user()
+        ];
+    }
+
+    protected function createNewToken($token)
+    {
+        return [
+            'access_token' => $token,
+            'user' => Auth::guard('api')->user()
         ];
     }
 }

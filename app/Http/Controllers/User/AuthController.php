@@ -34,7 +34,7 @@ class AuthController extends Controller
             'type' => 'success',
             'message' => trans('messages.registration_successful'),
             'user' => UserResource::make($data['user']),
-            'auth' => $data['token'],
+            'token' => $data['token'],
             'verification_code' => $data['verification_code'],
         ]);
     }
@@ -50,7 +50,7 @@ class AuthController extends Controller
                 'type' => 'success',
                 'message' => trans('messages.login_successful'),
                 'user' => UserResource::make(Auth::user()),
-                'auth' => $token,
+                'token' => $token['access_token'],
             ]);
         }
 
@@ -98,5 +98,19 @@ class AuthController extends Controller
             'type' => $response['type'],
             'message' => trans($response['message_code']),
         ]);
+    }
+
+    public function refresh()
+    {
+        $token = $this->authService->refresh();
+
+        if ($token) {
+            return response()->json([
+                'type' => 'success',
+                'message' => trans('messages.login_successful'),
+                'user' => UserResource::make(Auth::user()),
+                'token' => $token['access_token'],
+            ]);
+        }
     }
 }

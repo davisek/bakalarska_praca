@@ -29,30 +29,41 @@ Route::prefix('sensor-readings')->group(function () {
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::post('/resend-code', [AuthController::class, 'resendVerificationCode'])->middleware('auth:sanctum');
-    Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
+
+    Route::group(['middleware' => ['jwt.verify']], function() {
+        Route::post('/refresh', [AuthController::class, 'refresh']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/resend-code', [AuthController::class, 'resendVerificationCode']);
+        Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
+    });
 });
 
-Route::prefix('settings')->middleware('auth:sanctum')->group(function () {
-    Route::get('', [SettingController::class, 'show']);
-    Route::put('', [SettingController::class, 'update'])->middleware('email.verified');
-});
+Route::group(['middleware' => ['jwt.verify', 'jwt.refresh']], function() {
+    Route::prefix('settings')->group(function () {
+        Route::get('', [SettingController::class, 'show']);
+        Route::put('', [SettingController::class, 'update'])->middleware('email.verified');
+    });
 
-Route::prefix('user')->middleware('auth:sanctum')->group(function () {
-    Route::get('', [UserController::class, 'show']);
-    Route::put('', [UserController::class, 'update']);
-    Route::put('/change-password', [UserController::class, 'changePassword']);
+    Route::prefix('user')->group(function () {
+        Route::get('', [UserController::class, 'show']);
+        Route::put('', [UserController::class, 'update']);
+        Route::put('/change-password', [UserController::class, 'changePassword']);
+    });
 });
 
 Route::prefix('sensor-groups')->group(function () {
     Route::get('', [SensorGroupController::class, 'index']);
     Route::get('meta-data', [SensorGroupController::class, 'metaData']);
     Route::get('{sensorGroupId}', [SensorGroupController::class, 'show']);
-    Route::post('{sensorGroupId}', [SensorGroupController::class, 'update']);
+
+    Route::group(['middleware' => ['jwt.verify', 'jwt.refresh']], function() {
+        Route::post('{sensorGroupId}', [SensorGroupController::class, 'update']);
+    });
 });
 
 Route::prefix('sensors')->group(function () {
     Route::get('{sensorId}', [SensorController::class, 'show']);
-    Route::post('{sensorId}', [SensorController::class, 'update']);
+    Route::group(['middleware' => ['jwt.verify', 'jwt.refresh']], function() {
+        Route::post('{sensorId}', [SensorController::class, 'update']);
+    });
 });
