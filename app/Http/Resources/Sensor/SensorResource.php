@@ -18,6 +18,7 @@ class SensorResource extends JsonResource
             'display_name' => $this->display_name,
             'image_path' => $this->image_path ? asset('storage/' . $this->image_path) : null,
             'icon_path' => $this->icon_path ? asset('storage/' . $this->icon_path) : null,
+            'color_class' => $this->color_class ?? null
         ];
     }
 }

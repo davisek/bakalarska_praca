@@ -21,8 +21,7 @@ class SensorGroupController extends Controller
 
     public function show(int $sensorGroupId)
     {
-        $data = SensorGroup::with('sensors')
-                ->findOrFail($sensorGroupId);
+        $data = SensorGroup::with('sensors')->findOrFail($sensorGroupId);
 
         return SensorLinksResource::make($data);
     }
