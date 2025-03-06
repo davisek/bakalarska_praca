@@ -12,11 +12,12 @@ class SettingService implements ISettingService
     {
         $user = Auth::user();
 
-        $user->setting()->update([
-            'temperature_notification' => $settingData->temperature_notification,
-            'humidity_notification' => $settingData->humidity_notification,
-            'pressure_notification' => $settingData->pressure_notification,
-            'in_celsius' => $settingData->in_celsius,
-        ]);
+        foreach ($settingData->settings as $setting) {
+            $user->notificationSettings()
+                ->where('id', $setting['id'])
+                ->update([
+                    'email_notification_allowed' => $setting['email_notification_allowed']
+                ]);
+        }
     }
 }

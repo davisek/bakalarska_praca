@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
  * @property int $id
  * @property string $sensor_name
  * @property string $type
+ * @property string $display_name
  * @property string $unit_of_measurement
  * @property string $image_path
  * @property string $icon_path

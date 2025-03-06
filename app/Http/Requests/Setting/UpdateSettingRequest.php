@@ -22,10 +22,9 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'temperature_notification' => ['required', 'boolean'],
-            'humidity_notification' => ['required', 'boolean'],
-            'pressure_notification' => ['required', 'boolean'],
-            'in_celsius' => ['required', 'boolean']
+            'settings' => ['required', 'array'],
+            'settings.*.id' => ['required', 'integer', 'exists:notification_settings,id'],
+            'settings.*.email_notification_allowed' => ['required', 'boolean'],
         ];
     }
 }

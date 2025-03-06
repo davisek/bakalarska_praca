@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Data\ChangePasswordData;
 use App\Data\UserData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UpdatePasswordRequest;
@@ -40,15 +41,10 @@ class UserController extends Controller
 
     public function changePassword(UpdatePasswordRequest $request)
     {
-        $user = Auth::user();
+        $changePasswordData = ChangePasswordData::from($request->validated());
 
-        $user->update([
-            'password' => $request->validated()['password'],
-        ]);
+        $response = $this->userService->updatePassword($changePasswordData);
 
-        return response()->json([
-            'type' => 'success',
-            'message' => trans('messages.password_updated_successfully'),
-        ]);
+        return $response;
     }
 }

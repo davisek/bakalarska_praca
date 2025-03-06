@@ -7,4 +7,5 @@ return [
     'already_verified' => 'Váš email už bol overený.',
     'user_not_found' => 'Používateľ nebol nájdený.',
     'verification_failed' => 'Overenie zlyhalo. Kód je neplatný.',
+    'current_password_incorrect' => 'Heslo sa nezhoduje s aktuálnym heslom.',
 ];

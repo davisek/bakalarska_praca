@@ -15,6 +15,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @Model User
+ * @property int $id
  * @property string $name
  * @property string $surname
  * @property string $email

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Setting;
 
+use App\Http\Resources\Sensor\SensorResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,10 +17,8 @@ class SettingResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'temperature_notification' => (bool)$this->temperature_notification,
-            'humidity_notification' => (bool)$this->humidity_notification,
-            'pressure_notification' => (bool)$this->pressure_notification,
-            'in_celsius' => (bool)$this->in_celsius,
+            'email_notification_allowed' => $this->email_notification_allowed,
+            'sensor' => SensorResource::make($this->sensor)
         ];
     }
 }

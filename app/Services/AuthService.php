@@ -40,10 +40,12 @@ class AuthService implements IAuthService
 
         Mail::to($user->email)->send(new VerificationEmail($hash, $verification_code, $user->name . ' ' . $user->surname));
 
-        return [
-            'user' => $user,
-            'verification_code' => $verification_code,
-        ];
+        $token = JWTAuth::fromUser($user);
+
+        return array_merge(
+            $this->createNewToken($token),
+            ['verification_code' => $verification_code]
+        );
     }
 
     public function login(LoginData $loginData): ?array

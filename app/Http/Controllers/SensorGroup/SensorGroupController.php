@@ -26,7 +26,7 @@ class SensorGroupController extends Controller
         return SensorLinksResource::make($data);
     }
 
-    public function create()
+    public function store()
     {
 
     }

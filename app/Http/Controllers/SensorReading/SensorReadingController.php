@@ -55,7 +55,7 @@ class SensorReadingController extends Controller
         ]);
     }
 
-    public function create(SensorReadingCreateRequest $request)
+    public function store(SensorReadingCreateRequest $request)
     {
         $this->sensorReadingService->create($request->validated());
 

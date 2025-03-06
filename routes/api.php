@@ -23,7 +23,7 @@ Route::prefix('sensor-readings')->group(function () {
     Route::get('{sensor}', [SensorReadingController::class, 'show']);
     Route::get('/collection/{sensor}', [SensorReadingController::class, 'index']);
     Route::get('/collection/{sensor}/raw', [SensorReadingController::class, 'getRawData']);
-    Route::post('', [SensorReadingController::class, 'create']);
+    Route::post('', [SensorReadingController::class, 'store']);
 });
 
 Route::prefix('auth')->group(function () {
@@ -38,7 +38,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::group(['middleware' => ['jwt.verify', 'jwt.refresh']], function() {
+Route::group(['middleware' => ['jwt.verify']], function() {
     Route::prefix('settings')->group(function () {
         Route::get('', [SettingController::class, 'show']);
         Route::put('', [SettingController::class, 'update'])->middleware('email.verified');

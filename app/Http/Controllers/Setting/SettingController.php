@@ -22,7 +22,7 @@ class SettingController extends Controller
     {
         $user = Auth::user();
 
-        return SettingResource::make($user->setting);
+        return SettingResource::collection($user->notificationSettings);
     }
 
     public function update(UpdateSettingRequest $request)
