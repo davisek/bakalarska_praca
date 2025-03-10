@@ -23,6 +23,7 @@ Route::prefix('sensor-readings')->group(function () {
     Route::get('{sensor}', [SensorReadingController::class, 'show']);
     Route::get('/collection/{sensor}', [SensorReadingController::class, 'index']);
     Route::get('/collection/{sensor}/raw', [SensorReadingController::class, 'getRawData']);
+    Route::get('/collection/{sensor}/download', [SensorReadingController::class, 'downloadCsv']);
     Route::post('', [SensorReadingController::class, 'store']);
 });
 

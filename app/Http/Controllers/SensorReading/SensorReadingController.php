@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SensorReading;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SensorReading\SensorCsvRequestQuery;
 use App\Http\Requests\SensorReading\SensorReadingCreateRequest;
 use App\Http\Requests\SensorReading\SensorRawRequestQuery;
 use App\Http\Requests\SensorReading\SensorRequestQuery;
@@ -47,6 +48,13 @@ class SensorReadingController extends Controller
         $data = $this->sensorReadingService->getRawData($sensor, $request->validated());
 
         return SensorReadingResource::collection($data);
+    }
+
+    public function downloadCsv(string $sensor, SensorCsvRequestQuery $request)
+    {
+        $xlxs = $this->sensorReadingService->downloadCsV($sensor, $request->validated());
+
+        return $xlxs;
     }
 
     public function store(SensorReadingCreateRequest $request)
