@@ -9,4 +9,7 @@ return [
     'verification_code_resent' => 'Verification code resent successfully.',
     'email_verified' => 'Your email has been successfully verified.',
     'password_updated_successfully' => 'Your password has been updated successfully.',
+    'deleted_successfully' => 'Deleted successfully.',
+    'updated_successfully' => 'Updated successfully.',
+    'created_successfully' => 'Created successfully.',
 ];

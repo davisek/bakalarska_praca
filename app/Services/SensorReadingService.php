@@ -76,7 +76,6 @@ class SensorReadingService implements ISensorReadingService
         return $result;
     }
 
-
     public function getRawData(string $sensor_name, array $validatedRequest): LengthAwarePaginator
     {
         $to = isset($validatedRequest['to'])
@@ -96,16 +95,10 @@ class SensorReadingService implements ISensorReadingService
             ->whereNotNull('value')
             ->whereBetween('created_at', [$from, $to]);
 
-        if (empty($query)) {
-            return $query->paginate($perPage);
-        }
-        if (isset($validatedRequest['sort']) && is_array($validatedRequest['sort'])) {
-            foreach ($validatedRequest['sort'] as $sort) {
-                if (!empty($sort['field']) && !empty($sort['direction'])) {
-                    $query->orderBy($sort['field'], $sort['direction']);
-                }
-            }
-        }
+        $sortBy = $validatedRequest['sort_by'] ?: 'created_at';
+        $sortDir = $validatedRequest['sort_dir'] ?: 'asc';
+
+        $query->orderBy($sortBy, $sortDir);
 
         return $query->paginate($perPage);
     }

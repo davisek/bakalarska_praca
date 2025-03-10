@@ -2,8 +2,8 @@
 
 return [
     'locales' => [
-        'en' => 'Anglický',
-        'sk' => 'Slovenský',
+        'en' => 'Anglicky',
+        'sk' => 'Slovensky',
     ],
     'symbols' => [
         'celsius' => 'Celzia',

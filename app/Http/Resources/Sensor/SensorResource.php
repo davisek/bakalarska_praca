@@ -16,6 +16,7 @@ class SensorResource extends JsonResource
             'sensor_name' => $this->sensor_name,
             'type' => $this->type,
             'display_name' => $this->display_name,
+            'unit_of_measurement' => $this->unit_of_measurement,
             'image_path' => $this->image_path ? asset('storage/' . $this->image_path) : null,
             'icon_path' => $this->icon_path ? asset('storage/' . $this->icon_path) : null,
             'color_class' => $this->color_class ?? null,

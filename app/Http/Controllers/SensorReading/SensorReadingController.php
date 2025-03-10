@@ -44,15 +44,9 @@ class SensorReadingController extends Controller
 
     public function getRawData(string $sensor, SensorRawRequestQuery $request)
     {
-        $validatedRequest = $request->validated();
-        $data = $this->sensorReadingService->getRawData($sensor, $validatedRequest);
-        return response()->json([
-            'data' => SensorReadingResource::collection($data),
-            'current_page' => $data->currentPage(),
-            'last_page' => $data->lastPage(),
-            'per_page' => $data->perPage(),
-            'total' => $data->total(),
-        ]);
+        $data = $this->sensorReadingService->getRawData($sensor, $request->validated());
+
+        return SensorReadingResource::collection($data);
     }
 
     public function store(SensorReadingCreateRequest $request)

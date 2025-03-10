@@ -34,11 +34,10 @@ class AuthService implements IAuthService
         ]);
 
         Cache::store("file")->put($hash, [
-            "email" => $user->email,
             "verification_code" => $verification_code ,
         ], now()->addWeek());
 
-        Mail::to($user->email)->send(new VerificationEmail($hash, $verification_code, $user->name . ' ' . $user->surname));
+        Mail::to($user->email)->send(new VerificationEmail($verification_code, $user->name . ' ' . $user->surname));
 
         $token = JWTAuth::fromUser($user);
 
@@ -72,35 +71,27 @@ class AuthService implements IAuthService
         $new_hash = Str::random(150);
         $verification_code = rand(10000, 99999);
         Cache::store("file")->put($new_hash, [
-            "email" => $user->email,
             "verification_code" => $verification_code ,
         ], now()->addWeek());
 
         $user->hash = $new_hash;
         $user->save();
 
-        Mail::to($user->email)->send(new VerificationEmail($new_hash, $verification_code, $user->name . ' ' . $user->surname));
+        Mail::to($user->email)->send(new VerificationEmail($verification_code, $user->name . ' ' . $user->surname));
 
         return $verification_code;
     }
 
     public function verifyEmail(VerificationData $verificationData): array
     {
-        $cachedData = Cache::store('file')->get($verificationData->hash);
+        $user = Auth::user();
+
+        $cachedData = Cache::store('file')->get($user->hash);
 
         if (!$cachedData || $cachedData['verification_code'] != $verificationData->verification_code) {
             return [
                 'type' => 'error',
                 'message_code' => 'errors.verification_failed'
-            ];
-        }
-
-        $user = User::where('email', $cachedData['email'])->first();
-
-        if (!$user) {
-            return [
-                'type' => 'error',
-                'message_code' => 'errors.user_not_found'
             ];
         }
 
@@ -114,7 +105,7 @@ class AuthService implements IAuthService
         $user->email_verified_at = now();
         $user->hash = null;
         $user->save();
-        Cache::store('file')->forget($verificationData->hash);
+        Cache::store('file')->forget($user->hash);
 
         return [
             'type' => 'success',

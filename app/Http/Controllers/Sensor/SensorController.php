@@ -37,7 +37,7 @@ class SensorController extends Controller
         $sensor->type = $data['type'];
         $sensor->display_name = $data['display_name'] ?? $data['sensor_name'];
         $sensor->unit_of_measurement = $data['unit_of_measurement'];
-        $sensor->color_class = $data['color_class'] ?? 'default-card';
+        $sensor->color_class = $data['color_class'];
         $sensor->sensor_group_id = $data['sensor_group_id'];
 
         if ($request->hasFile('image')) {
@@ -63,9 +63,8 @@ class SensorController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'message' => 'Sensor successfully created.',
-            'sensor' => SensorResource::make($sensor)
-        ], 201);
+            'message' => trans('messages.created_successfully'),
+        ]);
     }
 
     public function update(int $sensorId, SensorUpdateRequest $request)
@@ -101,12 +100,17 @@ class SensorController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'message' => 'Sensor successfully updated.',
+            'message' => trans('messages.updated_successfully'),
         ]);
     }
 
-    public function destroy()
+    public function destroy(int $sensorId)
     {
+        Sensor::findOrFail($sensorId)->delete();
 
+        return response()->json([
+            'type' => 'success',
+            'message' => trans('messages.deleted_successfully'),
+        ]);
     }
 }

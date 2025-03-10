@@ -14,8 +14,7 @@ class EmailVerificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'hash' => ['required', 'string'],
-            'verification_code' => ['required', 'string']
+            'verification_code' => ['required', 'string', 'size:5']
         ];
     }
 }

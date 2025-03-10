@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,16 +12,14 @@ class VerificationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $hash;
     public string $verificationCode;
     public string $fullName;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(string $hash, string $verificationCode, string $fullName)
+    public function __construct(string $verificationCode, string $fullName)
     {
-        $this->hash = $hash;
         $this->verificationCode = $verificationCode;
         $this->fullName = $fullName;
     }

@@ -111,5 +111,12 @@ class AuthController extends Controller
                 'token' => $token['access_token'],
             ]);
         }
+
+        return null;
+    }
+
+    public function metaData()
+    {
+        return new MetaDataResource(null);
     }
 }

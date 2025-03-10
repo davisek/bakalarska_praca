@@ -6,7 +6,11 @@ use App\Data\UserData;
 
 interface IUserService
 {
+    public function index(array $request);
+
     public function update(UserData $userData);
 
     public function updatePassword(ChangePasswordData $changePasswordData);
+
+    public function getStatistics();
 }

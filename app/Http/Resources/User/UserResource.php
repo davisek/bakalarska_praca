@@ -22,6 +22,8 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at ?? null,
             'locale' => EnumResource::make($this->locale),
+            'is_admin' => $this->is_admin,
+            'created_at' => $this->created_at,
         ];
     }
 }

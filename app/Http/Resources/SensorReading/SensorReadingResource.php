@@ -14,7 +14,7 @@ class SensorReadingResource extends JsonResource
         return [
             'value' => $this->value,
             'symbol' => $this->sensor->unit_of_measurement,
-            'recorded_at' => $this->created_at->toDateTimeString(),
+            'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
 }

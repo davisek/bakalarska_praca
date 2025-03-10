@@ -6,14 +6,14 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EmailIsVerified
+class IsAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (is_null($request->user()->email_verified_at)) {
+        if (!$request->user()->is_admin) {
             return response()->json([
                 'type' => 'error',
-                'message' => trans('errors.email_not_verified'),
+                'message' => trans('errors.unauthenticated'),
             ]);
         }
 

@@ -25,6 +25,8 @@ class NotificationSetting extends Model
     protected $table = 'notification_settings';
 
     protected $fillable = [
+        'user_id',
+        'sensor_id',
         'email_notification_allowed',
     ];
 

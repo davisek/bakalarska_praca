@@ -9,4 +9,7 @@ return [
     'verification_code_resent' => 'Overovací kód bol úspešne poslaný.',
     'email_verified' => 'Váš email bol úspešne overený.',
     'password_updated_successfully' => 'Vaše heslo bolo úspešne zmenené.',
+    'deleted_successfully' => 'Úspešne odstráneno.',
+    'updated_successfully' => 'Úspešne prebehli zmeny.',
+    'created_successfully' => 'Úspešne vytvorený.',
 ];

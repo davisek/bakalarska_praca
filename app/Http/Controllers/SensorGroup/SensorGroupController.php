@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SensorGroup;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SensorGroup\SensorGroupStoreRequest;
 use App\Http\Requests\SensorGroup\SensorGroupUpdateRequest;
 use App\Http\Resources\EnumResources\MetaDataResource;
 use App\Http\Resources\SensorGroup\SensorLinksResource;
@@ -26,9 +27,25 @@ class SensorGroupController extends Controller
         return SensorLinksResource::make($data);
     }
 
-    public function store()
+    public function store(SensorGroupStoreRequest $request)
     {
+        $data = $request->validated();
 
+        $sensorGroup = SensorGroup::create([
+            'group_name' => $data['group_name'],
+            'group_value' => $data['group_value']
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images/sensors', 'public');
+            $sensorGroup->image_path = $path;
+            $sensorGroup->save();
+        }
+
+        return response()->json([
+            'type' => 'success',
+            'message' => trans('messages.created_successfully'),
+        ]);
     }
 
     public function update(int $sensorGroupId, SensorGroupUpdateRequest $request)
@@ -53,17 +70,17 @@ class SensorGroupController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'message' => 'Sensor group successfully updated.',
+            'message' => trans('messages.updated_successfully'),
         ]);
     }
 
-    public function destroy()
+    public function destroy(int $sensorGroupId)
     {
+        SensorGroup::findOrFail($sensorGroupId)->delete();
 
-    }
-
-    public function metaData()
-    {
-        return new MetaDataResource(null);
+        return response()->json([
+            'type' => 'success',
+            'message' => trans('messages.deleted_successfully'),
+        ]);
     }
 }
