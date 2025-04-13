@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('hash')->nullable();
             $table->string('locale')->nullable();
             $table->boolean('is_admin')->nullable();
+            $table->boolean('dark_mode')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

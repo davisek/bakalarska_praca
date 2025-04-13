@@ -13,6 +13,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('sensor_id')->constrained('sensors')->onDelete('cascade');
             $table->boolean('email_notification_allowed')->default(0);
+            $table->float('treshold')->nullable();
+            $table->integer('cooldown')->nullable();
+            $table->timestamp('last_notification_at')->nullable();
             $table->timestamps();
         });
     }

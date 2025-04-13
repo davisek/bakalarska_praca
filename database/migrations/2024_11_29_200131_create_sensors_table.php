@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('type', 50)->unique();
             $table->string('display_name', 50)->unique();
             $table->string('unit_of_measurement', 10)->nullable();
+            $table->boolean('is_output_binary')->default(false);
             $table->string('color_class', 50)->nullable();
             $table->string('image_path', 255)->nullable();
             $table->string('icon_path', 255)->nullable();
