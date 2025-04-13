@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Sensor\ColorClass;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,9 +17,10 @@ use Illuminate\Support\Collection;
  * @property string $type
  * @property string $display_name
  * @property string $unit_of_measurement
+ * @property boolean $is_output_binary
  * @property string $image_path
  * @property string $icon_path
- * @property string $color_class
+ * @property ColorClass $color_class
  * @property int $sensor_group_id
  * @property Carbon|Null $created_at
  * @property Carbon|Null $updated_at
@@ -36,10 +38,16 @@ class Sensor extends Model
         'type',
         'display_name',
         'unit_of_measurement',
+        'is_output_binary',
         'image_path',
         'icon_path',
         'color_class',
         'sensor_group_id',
+    ];
+
+    protected $casts = [
+        'is_output_binary' => 'boolean',
+        'color_class' => ColorClass::class
     ];
 
     public function measurements(): HasMany

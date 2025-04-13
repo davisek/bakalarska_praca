@@ -8,16 +8,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SettingResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'email_notification_allowed' => $this->email_notification_allowed,
+            'treshold' => $this->treshold,
+            'cooldown' => $this->cooldown,
+            'min_unit_diff' => $this->min_unit_diff,
             'sensor' => SensorResource::make($this->sensor)
         ];
     }

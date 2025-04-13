@@ -74,4 +74,17 @@ class UserController extends Controller
             'message' => trans('messages.deleted_successfully'),
         ]);
     }
+
+    public function generateAuthKey()
+    {
+        $data = $this->userService->generateAuthKey();
+
+        return response()->json([
+            'type' => 'success',
+            'message' => trans('messages.created_successfully'),
+            'data' => [
+                'auth_key' => $data
+            ]
+        ]);
+    }
 }

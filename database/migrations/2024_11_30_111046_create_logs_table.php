@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->text('message')->required();
+            $table->text('message');
             $table->timestamps();
         });
     }

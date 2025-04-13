@@ -10,5 +10,6 @@ class UserData extends Data
         public string $surname,
         public string $email,
         public string $locale,
+        public bool $dark_mode,
     ) {}
 }

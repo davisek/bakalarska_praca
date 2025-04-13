@@ -13,4 +13,6 @@ interface IUserService
     public function updatePassword(ChangePasswordData $changePasswordData);
 
     public function getStatistics();
+
+    public function generateAuthKey();
 }

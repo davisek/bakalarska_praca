@@ -15,8 +15,8 @@ class SensorGroupStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group_name' => ['required', 'string', Rule::unique('sensor_groups', 'group_name')],
-            'group_value' => ['required', 'string', Rule::unique('sensor_groups', 'group_value')],
+            'group_name' => ['required', 'string', 'max:50', Rule::unique('sensor_groups', 'group_name')],
+            'group_value' => ['required', 'string', 'max:50', Rule::unique('sensor_groups', 'group_value')],
             'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
     }

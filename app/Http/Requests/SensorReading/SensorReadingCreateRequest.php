@@ -14,7 +14,7 @@ class SensorReadingCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sensor_name' => ['required', 'string'],
+            'sensor_name' => ['required', 'string', 'max:50'],
             'value' => ['required', 'numeric'],
         ];
     }

@@ -167,13 +167,9 @@ class SensorReadingService implements ISensorReadingService
     {
         $sensor = Sensor::where('type', $data['sensor_name'])->first();
 
-        $timestamp = Carbon::now();
-
         Measurement::create([
             'sensor_id' => $sensor->id,
             'value' => $data['value'],
-            'created_at' => $timestamp,
-            'updated_at' => $timestamp,
         ]);
     }
 }

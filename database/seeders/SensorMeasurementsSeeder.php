@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Sensor\ColorClass;
 use App\Models\Sensor;
 use App\Models\SensorGroup;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
@@ -16,15 +18,15 @@ class SensorMeasurementsSeeder extends Seeder
         $assetPathSensorImage = resource_path('assets/sensor-images');
         $assetPathSensorIcon = resource_path('assets/sensor-icons');
 
-        $commonGroup = SensorGroup::create([
-            'group_name' => 'Common',
-            'group_value' => 'common',
-            'image_path' => $this->storeImage($assetPathGroupImage, 'room-image.jpg'),
-        ]);
-        $quality = SensorGroup::create([
-            'group_name' => 'Quality',
-            'group_value' => 'quality',
+        $outdoor = SensorGroup::create([
+            'group_name' => 'Outdoor',
+            'group_value' => 'outdoor',
             'image_path' => $this->storeImage($assetPathGroupImage, 'outdoor-image.jpg'),
+        ]);
+        $indoor = SensorGroup::create([
+            'group_name' => 'Indoor',
+            'group_value' => 'indoor',
+            'image_path' => $this->storeImage($assetPathGroupImage, 'room-image.jpg'),
         ]);
         SensorGroup::create([
             'group_name' => 'Others',
@@ -36,7 +38,9 @@ class SensorMeasurementsSeeder extends Seeder
             'type' => 'temperature',
             'display_name' => 'Temperature',
             'unit_of_measurement' => '°C',
-            'sensor_group_id' => $commonGroup->id,
+            'is_output_binary' => false,
+            'sensor_group_id' => $outdoor->id,
+            'color_class' => ColorClass::TEMPERATURE_CARD,
             'image_path' => $this->storeImage($assetPathSensorImage, 'temperature-image.jpg'),
             'icon_path' => $this->storeImage($assetPathSensorIcon, 'temperature.png'),
         ]);
@@ -45,34 +49,42 @@ class SensorMeasurementsSeeder extends Seeder
             'type' => 'humidity',
             'display_name' => 'Humidity',
             'unit_of_measurement' => '%',
-            'sensor_group_id' => $commonGroup->id,
+            'is_output_binary' => false,
+            'sensor_group_id' => $outdoor->id,
+            'color_class' => ColorClass::HUMIDITY_CARD,
             'image_path' => $this->storeImage($assetPathSensorImage, 'humidity-image.jpg'),
             'icon_path' => $this->storeImage($assetPathSensorIcon, 'humidity.png'),
         ]);
         Sensor::create([
             'sensor_name' => 'BME680',
             'type' => 'pressure-bme',
-            'display_name' => 'BME Pressure',
+            'display_name' => 'Indoor Pressure',
             'unit_of_measurement' => 'hPa',
-            'sensor_group_id' => $quality->id,
+            'is_output_binary' => false,
+            'sensor_group_id' => $indoor->id,
+            'color_class' => ColorClass::DEFAULT_CARD,
             'image_path' => $this->storeImage($assetPathSensorImage, 'pressure-image.jpg'),
             'icon_path' => $this->storeImage($assetPathSensorIcon, 'pressure.png'),
         ]);
         Sensor::create([
             'sensor_name' => 'BME680',
             'type' => 'temperature-bme',
-            'display_name' => 'BME Temperature',
+            'display_name' => 'Indoor Temperature',
             'unit_of_measurement' => '°C',
-            'sensor_group_id' => $quality->id,
+            'is_output_binary' => false,
+            'sensor_group_id' => $indoor->id,
+            'color_class' => ColorClass::TEMPERATURE_CARD,
             'image_path' => $this->storeImage($assetPathSensorImage, 'temperature-image.jpg'),
             'icon_path' => $this->storeImage($assetPathSensorIcon, 'temperature.png'),
         ]);
         Sensor::create([
             'sensor_name' => 'BME680',
             'type' => 'humidity-bme',
-            'display_name' => 'BME Humidity',
+            'display_name' => 'Indoor Humidity',
             'unit_of_measurement' => '%',
-            'sensor_group_id' => $quality->id,
+            'is_output_binary' => false,
+            'sensor_group_id' => $indoor->id,
+            'color_class' => ColorClass::HUMIDITY_CARD,
             'image_path' => $this->storeImage($assetPathSensorImage, 'humidity-image.jpg'),
             'icon_path' => $this->storeImage($assetPathSensorIcon, 'humidity.png'),
         ]);

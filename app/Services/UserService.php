@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Data\ChangePasswordData;
 use App\Data\UserData;
+use App\Models\Log;
 use App\Models\Measurement;
 use App\Models\Sensor;
 use App\Models\User;
@@ -62,6 +63,7 @@ class UserService implements IUserService
             'surname' => $userData->surname,
             'email' => $userData->email,
             'locale' => $userData->locale,
+            'dark_mode' => $userData->dark_mode,
         ]);
 
         if ($isMailNew) {
@@ -79,6 +81,16 @@ class UserService implements IUserService
                 'message' => trans('errors.current_password_incorrect'),
                 'errors' => [
                     'current_password' => [trans('errors.current_password_incorrect')]
+                ]
+            ], 422);
+        }
+
+        if (Hash::check($changePasswordData->password, $user->password)) {
+            return response()->json([
+                'type' => 'error',
+                'message' => trans('errors.password_same_as_old_one'),
+                'errors' => [
+                    'password' => [trans('errors.password_same_as_old_one')]
                 ]
             ], 422);
         }
@@ -105,6 +117,18 @@ class UserService implements IUserService
             'totalSensors' => Sensor::all()->count(),
             'newUsersToday' => User::whereDate('created_at', $today)->count(),
             'newReadingsToday' => Measurement::whereDate('created_at', $today)->count(),
+            'newLogsToday' => Log::whereDate('created_at', $today)->count(),
         ];
+    }
+
+    public function generateAuthKey()
+    {
+        $user = Auth::user();
+        $authKey = bin2hex(random_bytes(32));
+
+        $user->auth_key = $authKey;
+        $user->save();
+
+        return $authKey;
     }
 }

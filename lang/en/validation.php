@@ -170,8 +170,9 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'threshold' => [
+            'required_when_not_binary' => 'The :attribute is required.',
+            'range' => 'The :attribute must be between 1 and 100.',
         ],
     ],
 
@@ -186,6 +187,11 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'settings.*.threshold' => 'threshold',
+        'settings.*.min_unit_diff' => 'minimum unit difference',
+        'settings.*.cooldown' => 'cooldown (hours)',
+        'settings.*.email_notification_allowed' => 'email notifications enabled',
+    ],
 
 ];

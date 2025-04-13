@@ -15,9 +15,7 @@ class SettingService implements ISettingService
         foreach ($settingData->settings as $setting) {
             $user->notificationSettings()
                 ->where('id', $setting['id'])
-                ->update([
-                    'email_notification_allowed' => $setting['email_notification_allowed']
-                ]);
+                ->update($setting);
         }
     }
 }

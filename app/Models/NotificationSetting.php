@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property int $sensor_id
  * @property boolean $email_notification_allowed
+ * @property double $threshold
+ * @property int $cooldown
+ * @property double $min_unit_diff
  * @property Carbon|Null $created_at
  * @property Carbon|Null $updated_at
  * @property User $user
@@ -28,10 +31,14 @@ class NotificationSetting extends Model
         'user_id',
         'sensor_id',
         'email_notification_allowed',
+        'threshold',
+        'cooldown',
+        'min_unit_diff',
     ];
 
     protected $casts = [
         'email_notification_allowed' => 'boolean',
+        'last_notification_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('group_name', 50)->unique();
             $table->string('group_value', 50)->unique();
-            $table->string('image_path')->nullable();
+            $table->string('image_path', 255)->nullable();
             $table->timestamps();
         });
     }

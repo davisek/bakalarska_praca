@@ -4,6 +4,7 @@ namespace App\Services\Interfaces;
 use App\Data\LoginData;
 use App\Data\RegisterData;
 use App\Data\VerificationData;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,4 +21,8 @@ interface IAuthService
     public function verifyEmail(VerificationData $verificationData): array;
 
     public function refresh(): array;
+
+    public function getUserByLogin(string $email);
+
+    public static function verify(array $data, User $user);
 }

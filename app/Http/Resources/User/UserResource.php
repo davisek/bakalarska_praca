@@ -8,11 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -23,6 +18,7 @@ class UserResource extends JsonResource
             'email_verified_at' => $this->email_verified_at ?? null,
             'locale' => EnumResource::make($this->locale),
             'is_admin' => $this->is_admin,
+            'dark_mode' => $this->dark_mode,
             'created_at' => $this->created_at,
         ];
     }

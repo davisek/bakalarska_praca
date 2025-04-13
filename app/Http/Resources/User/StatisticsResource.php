@@ -8,11 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class StatisticsResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -21,6 +16,7 @@ class StatisticsResource extends JsonResource
             'total_sensors' => $this['totalSensors'],
             'new_users_today' => $this['newUsersToday'],
             'new_readings_today' => $this['newReadingsToday'],
+            'new_logs_today' => $this['newLogsToday'],
         ];
     }
 }

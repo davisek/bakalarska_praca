@@ -1,12 +1,12 @@
 <?php
 namespace App\Services\Interfaces;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use App\Http\Requests\SensorGroup\SensorGroupStoreRequest;
+use App\Http\Requests\SensorGroup\SensorGroupUpdateRequest;
 
 interface ISensorGroupService
 {
+    public function create(SensorGroupStoreRequest $request);
 
+    public function update(int $sensorGroupId, SensorGroupUpdateRequest $request);
 }

@@ -4,14 +4,13 @@ namespace App\Services;
 use App\Data\LoginData;
 use App\Data\RegisterData;
 use App\Data\VerificationData;
-use App\Enums\Setting\SymbolEnum;
 use App\Mail\VerificationEmail;
 use App\Models\User;
 use App\Services\Interfaces\IAuthService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -30,11 +29,12 @@ class AuthService implements IAuthService
             'password' => $registerData->password,
             'locale' => $registerData->locale,
             'is_admin' => false,
+            'dark_mode' => $registerData->dark_mode,
             'hash' => $hash,
         ]);
 
         Cache::store("file")->put($hash, [
-            "verification_code" => $verification_code ,
+            "verification_code" => $verification_code,
         ], now()->addWeek());
 
         Mail::to($user->email)->send(new VerificationEmail($verification_code, $user->name . ' ' . $user->surname));
@@ -43,7 +43,10 @@ class AuthService implements IAuthService
 
         return array_merge(
             $this->createNewToken($token),
-            ['verification_code' => $verification_code]
+            [
+                'verification_code' => $verification_code,
+                'user' => $user
+            ]
         );
     }
 
@@ -102,10 +105,11 @@ class AuthService implements IAuthService
             ];
         }
 
+        Cache::store('file')->forget($user->hash);
+
         $user->email_verified_at = now();
         $user->hash = null;
         $user->save();
-        Cache::store('file')->forget($user->hash);
 
         return [
             'type' => 'success',
@@ -129,5 +133,49 @@ class AuthService implements IAuthService
             'access_token' => $token,
             'user' => Auth::guard('api')->user()
         ];
+    }
+
+    public function getUserByLogin(string $email)
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'type' => 'error',
+                'message' => trans('errors.invalid_credentials'),
+            ]);
+        }
+
+        return $user;
+    }
+
+    public static function verify(array $data, User $user)
+    {
+        $cacheCode = Cache::get('forgot_password_code_user' . $user->id);
+
+        if ($cacheCode !== $data['code']) {
+            return response()->json([
+                'type' => 'error',
+                'message' => trans('errors.verification_failed'),
+                'errors' => [
+                    'password' => [trans('errors.verification_failed')]
+                ]
+            ], 422);
+        }
+        if (Hash::check($user->password, $data['password'])) {
+            return response()->json([
+                'type' => 'error',
+                'message' => trans('errors.password_same_as_old_one'),
+                'errors' => [
+                    'password' => [trans('errors.password_same_as_old_one')]
+                ]
+            ], 422);
+        }
+
+        Cache::forget('forgot_password_code_user' . $user->id);
+
+        $user->update([
+            'password' => $data['password']
+        ]);
     }
 }

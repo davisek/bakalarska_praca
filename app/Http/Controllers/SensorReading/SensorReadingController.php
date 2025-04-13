@@ -57,7 +57,7 @@ class SensorReadingController extends Controller
         return $xlxs;
     }
 
-    public function store(SensorReadingCreateRequest $request)
+    public function create(SensorReadingCreateRequest $request)
     {
         $this->sensorReadingService->create($request->validated());
 

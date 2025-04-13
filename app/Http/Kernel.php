@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\EmailIsVerified;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsSensorKeyValid;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -71,6 +72,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'email.verified' => EmailIsVerified::class,
         'is.admin' => IsAdmin::class,
+        'sensor.admin.key' => IsSensorKeyValid::class,
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
         'jwt.auth' => \PHPOpenSourceSaver\JWTAuth\Http\Middleware\Authenticate::class,
         'jwt.refresh' => \PHPOpenSourceSaver\JWTAuth\Http\Middleware\RefreshToken::class,

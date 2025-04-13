@@ -10,16 +10,16 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('surname')->nullable();
-            $table->string('email')->unique();
+            $table->string('name', 50)->nullable();
+            $table->string('surname', 50)->nullable();
+            $table->string('email', 255)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password')->nullable();
-            $table->string('hash')->nullable();
-            $table->string('locale')->nullable();
+            $table->string('password', 255)->nullable();
+            $table->string('hash', 150)->nullable();
+            $table->string('locale', '3')->nullable();
             $table->boolean('is_admin')->nullable();
             $table->boolean('dark_mode')->default(true);
-            $table->rememberToken();
+            $table->string('auth_key', 64)->nullable();
             $table->timestamps();
         });
     }

@@ -116,4 +116,18 @@ return [
     'uploaded' => 'Nahrávanie :attribute zlyhalo.',
     'url' => ':attribute musí byť platná URL.',
     'uuid' => ':attribute musí byť platné UUID.',
+
+    'custom' => [
+        'threshold' => [
+            'required_when_not_binary' => 'Pole :attribute je povinné.',
+            'range' => 'Pole :attribute musí byť číslo medzi 1 a 100.',
+        ],
+    ],
+
+    'attributes' => [
+        'settings.*.threshold' => 'prahová hodnota',
+        'settings.*.min_unit_diff' => 'minimálny rozdiel jednotiek',
+        'settings.*.cooldown' => 'časový odstup (v hodinách)',
+        'settings.*.email_notification_allowed' => 'povolené emailové notifikácie',
+    ],
 ];

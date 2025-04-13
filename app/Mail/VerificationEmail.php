@@ -15,18 +15,12 @@ class VerificationEmail extends Mailable
     public string $verificationCode;
     public string $fullName;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct(string $verificationCode, string $fullName)
     {
         $this->verificationCode = $verificationCode;
         $this->fullName = $fullName;
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -34,9 +28,6 @@ class VerificationEmail extends Mailable
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         $locale = app()->getLocale();
@@ -46,11 +37,6 @@ class VerificationEmail extends Mailable
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];
