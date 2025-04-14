@@ -25,6 +25,12 @@ class UpdateSettingRequest extends FormRequest
                     $index = $matches[1] ?? null;
 
                     if ($index !== null) {
+                        $emailNotificationsAllowed = request("settings.$index.email_notification_allowed");
+
+                        if (!$emailNotificationsAllowed) {
+                            return;
+                        }
+
                         $settingId = request("settings.$index.id");
                         $setting = NotificationSetting::with('sensor')->find($settingId);
 
@@ -38,7 +44,26 @@ class UpdateSettingRequest extends FormRequest
                     }
                 }
             ],
-            'settings.*.cooldown' => ['required', 'integer'],
+            'settings.*.cooldown' => [
+                function ($attribute, $value, $fail) {
+                    preg_match('/settings\.(\d+)\.cooldown/', $attribute, $matches);
+                    $index = $matches[1] ?? null;
+
+                    if ($index !== null) {
+                        $emailNotificationsAllowed = request("settings.$index.email_notification_allowed");
+
+                        if (!$emailNotificationsAllowed) {
+                            return;
+                        }
+
+                        if (is_null($value)) {
+                            $fail(trans('validation.required', ['attribute' => 'cooldown']));
+                        } elseif (!is_integer($value) && !ctype_digit($value)) {
+                            $fail(trans('validation.integer', ['attribute' => 'cooldown']));
+                        }
+                    }
+                }
+            ],
             'settings.*.min_unit_diff' => ['nullable', 'numeric', 'max:99.99'],
         ];
     }
