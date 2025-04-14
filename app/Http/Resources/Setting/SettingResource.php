@@ -13,7 +13,7 @@ class SettingResource extends JsonResource
         return [
             'id' => $this->id,
             'email_notification_allowed' => $this->email_notification_allowed,
-            'treshold' => $this->treshold,
+            'threshold' => $this->threshold,
             'cooldown' => $this->cooldown,
             'min_unit_diff' => $this->min_unit_diff,
             'sensor' => SensorResource::make($this->sensor)
