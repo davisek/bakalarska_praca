@@ -22,7 +22,7 @@
     </p>
 
     <p style="font-size: 28px; font-weight: bold; margin-top: 10px; background: #1f2937; display: inline-block; padding: 10px 20px; border-radius: 6px;">
-        {{ $verificationCode }}
+        {{ $code }}
     </p>
 
     <p style="font-size: 14px; margin-top: 30px;">
