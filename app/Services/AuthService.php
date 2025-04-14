@@ -29,7 +29,7 @@ class AuthService implements IAuthService
             'password' => $registerData->password,
             'locale' => $registerData->locale,
             'is_admin' => false,
-            'dark_mode' => $registerData->dark_mode,
+            'dark_mode' => true,
             'hash' => $hash,
         ]);
 

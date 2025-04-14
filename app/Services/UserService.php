@@ -115,6 +115,7 @@ class UserService implements IUserService
             'totalUsers' => $users->count(),
             'adminUsers' => $users->where('is_admin', true)->count(),
             'totalSensors' => Sensor::all()->count(),
+            'totalLogs' => Log::all()->count(),
             'newUsersToday' => User::whereDate('created_at', $today)->count(),
             'newReadingsToday' => Measurement::whereDate('created_at', $today)->count(),
             'newLogsToday' => Log::whereDate('created_at', $today)->count(),

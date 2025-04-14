@@ -14,6 +14,7 @@ class StatisticsResource extends JsonResource
             'total_users' => $this['totalUsers'],
             'admin_users' => $this['adminUsers'],
             'total_sensors' => $this['totalSensors'],
+            'total_logs' => $this['totalLogs'],
             'new_users_today' => $this['newUsersToday'],
             'new_readings_today' => $this['newReadingsToday'],
             'new_logs_today' => $this['newLogsToday'],
