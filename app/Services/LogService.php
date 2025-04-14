@@ -23,7 +23,7 @@ class LogService implements ILogService
         }
 
         $sortBy = $request['sort_by'] ?: 'created_at';
-        $sortDir = $request['sort_dir'] ?: 'desc';
+        $sortDir = $request['sort_dir'] ?: 'asc';
 
         $query->orderBy($sortBy, $sortDir);
 
