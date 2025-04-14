@@ -24,5 +24,5 @@ interface IAuthService
 
     public function getUserByLogin(string $email);
 
-    public static function verify(array $data, User $user);
+    public function verify(array $data, User $user);
 }

@@ -149,11 +149,11 @@ class AuthService implements IAuthService
         return $user;
     }
 
-    public static function verify(array $data, User $user)
+    public function verify(array $data, User $user)
     {
         $cacheCode = Cache::get('forgot_password_code_user' . $user->id);
 
-        if ($cacheCode !== $data['code']) {
+        if ($cacheCode != $data['code']) {
             return response()->json([
                 'type' => 'error',
                 'message' => trans('errors.verification_failed'),
@@ -162,7 +162,7 @@ class AuthService implements IAuthService
                 ]
             ], 422);
         }
-        if (Hash::check($user->password, $data['password'])) {
+        if (Hash::check($data['password'], $user->password)) {
             return response()->json([
                 'type' => 'error',
                 'message' => trans('errors.password_same_as_old_one'),
@@ -177,5 +177,7 @@ class AuthService implements IAuthService
         $user->update([
             'password' => $data['password']
         ]);
+
+        return null;
     }
 }

@@ -16,7 +16,9 @@ use App\Http\Resources\User\UserResource;
 use App\Mail\PasswordResetEmail;
 use App\Models\User;
 use App\Services\Interfaces\IAuthService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
@@ -122,8 +124,13 @@ class AuthController extends Controller
 
     public function forgot(ForgotPasswordRequest $request)
     {
-        $user = $this->authService->getUserByLogin($request->validated()['email']);
+        $result = $this->authService->getUserByLogin($request->validated()['email']);
 
+        if ($result instanceof Response || $result instanceof JsonResponse) {
+            return $result;
+        }
+
+        $user = $result;
         $this->sentResetCode($user);
 
         return response()->json([
@@ -134,8 +141,13 @@ class AuthController extends Controller
 
     public function resend(ForgotPasswordRequest $request)
     {
-        $user = $this->authService->getUserByLogin($request->validated()['email']);
+        $result = $this->authService->getUserByLogin($request->validated()['email']);
 
+        if ($result instanceof Response || $result instanceof JsonResponse) {
+            return $result;
+        }
+
+        $user = $result;
         $this->sentResetCode($user);
 
         return response()->json([
@@ -147,7 +159,6 @@ class AuthController extends Controller
     public function reset(ResetPasswordRequest $request)
     {
         $data = $request->validated();
-
         $user = $this->authService->getUserByLogin($data['email']);
 
         if (!$user) {
@@ -160,7 +171,11 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $this->authService->verify($data, $user);
+        $verifyResult = $this->authService->verify($data, $user);
+        if ($verifyResult) {
+            return $verifyResult;
+        }
+
         Auth::login($user);
         $token = JWTAuth::fromUser($user);
 
