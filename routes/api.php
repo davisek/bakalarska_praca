@@ -65,6 +65,7 @@ Route::prefix('sensor-groups')->group(function () {
 });
 
 Route::prefix('sensors')->group(function () {
+    Route::get('meta-data', [SensorController::class, 'metaData']);
     Route::get('{sensorId}', [SensorController::class, 'show']);
     Route::group(['middleware' => ['jwt.verify', 'is.admin']], function() {
         Route::post('{sensorId}', [SensorController::class, 'update']);

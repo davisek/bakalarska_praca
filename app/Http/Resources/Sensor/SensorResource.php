@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Sensor;
 
 use App\Enums\Setting\SymbolEnum;
+use App\Http\Resources\EnumResources\EnumResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -20,7 +21,7 @@ class SensorResource extends JsonResource
             'is_output_binary' => $this->is_output_binary,
             'image_path' => $this->image_path ? asset('storage/' . $this->image_path) : null,
             'icon_path' => $this->icon_path ? asset('storage/' . $this->icon_path) : null,
-            'color_class' => $this->color_class ?? null,
+            'color_class' => $this->color_class ? EnumResource::make($this->color_class) : null,
             'group_name' => $this->sensorGroup->group_name,
         ];
     }

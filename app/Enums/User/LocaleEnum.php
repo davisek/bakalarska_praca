@@ -12,7 +12,7 @@ enum LocaleEnum: string
         return trans('enums.locales.' . $this->value);
     }
 
-    public function symbol(): string
+    public function symbol(): ?string
     {
         return match($this) {
             self::ENGLISH => asset('icons/UNITED_KINGDOM.svg'),

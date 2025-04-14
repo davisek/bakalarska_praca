@@ -17,4 +17,9 @@ enum ColorClass: string
         return trans('enums.color_classes.' . $this->value);
 
     }
+
+    public function symbol(): ?string
+    {
+        return null;
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sensor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sensor\SensorStoreRequest;
 use App\Http\Requests\Sensor\SensorUpdateRequest;
+use App\Http\Resources\EnumResources\MetaDataColorClassResource;
 use App\Http\Resources\Sensor\SensorResource;
 use App\Models\NotificationSetting;
 use App\Models\Sensor;
@@ -57,5 +58,10 @@ class SensorController extends Controller
             'type' => 'success',
             'message' => trans('messages.deleted_successfully'),
         ]);
+    }
+
+    public function metaData()
+    {
+        return new MetaDataColorClassResource(null);
     }
 }
