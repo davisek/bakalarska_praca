@@ -2,10 +2,8 @@
 
 namespace App\Http\Resources\SensorReading;
 
-use App\Enums\Setting\SymbolEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class SensorReadingResource extends JsonResource
 {

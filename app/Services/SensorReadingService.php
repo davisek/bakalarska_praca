@@ -39,17 +39,17 @@ class SensorReadingService implements ISensorReadingService
 
         $sensor = Sensor::where('type', $sensor_name)->first();
 
-        if ($sensor) {
-            $data = Measurement::with('sensor')
-                ->select('sensor_id', 'value', 'created_at')
-                ->where('sensor_id', $sensor->id)
-                ->whereNotNull('value')
-                ->whereBetween('created_at', [$from, $to])
-                ->orderBy('created_at')
-                ->get();
-        } else {
-            $data = collect();
+        if (!$sensor) {
+            return collect();
         }
+
+        $data = Measurement::with('sensor')
+            ->select('sensor_id', 'value', 'created_at')
+            ->where('sensor_id', $sensor->id)
+            ->whereNotNull('value')
+            ->whereBetween('created_at', [$from, $to])
+            ->orderBy('created_at')
+            ->get();
 
         $totalCount = $data->count();
 
@@ -59,17 +59,28 @@ class SensorReadingService implements ISensorReadingService
 
         $intervalSize = $totalCount / $maxPoints;
 
-        $result = collect(range(0, $maxPoints - 1))->map(function ($i) use ($data, $intervalSize) {
+        $result = collect(range(0, $maxPoints - 1))->map(function ($i) use ($data, $intervalSize, $sensor) {
             $startIndex = floor($i * $intervalSize);
             $intervalData = $data->slice($startIndex, ceil($intervalSize));
 
             $firstMeasurement = $intervalData->first();
-            if ($firstMeasurement) {
-                $firstMeasurement->value = $intervalData->avg('value');
+
+            if (!$firstMeasurement) {
+                return null;
+            }
+
+            if ($sensor->is_output_binary) {
+                $countTriggered = $intervalData->filter(function ($m) {
+                    return $m->value === 1.0;
+                })->count();
+
+                $firstMeasurement->value = $countTriggered;
+            } else {
+                $firstMeasurement->value = round($intervalData->avg('value'), 2);
             }
 
             return $firstMeasurement;
-        });
+        })->filter();
 
         $lastResult = $result->last();
         $lastData = $data->last();
@@ -80,6 +91,7 @@ class SensorReadingService implements ISensorReadingService
 
         return $result;
     }
+
 
     public function getRawData(string $sensor_name, array $validatedRequest): LengthAwarePaginator
     {

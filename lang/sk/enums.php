@@ -9,6 +9,10 @@ return [
         'celsius' => 'Celzia',
         'fahrenheit' => 'Fahrenheit',
     ],
+    'measurements' => [
+        'SILENT' => 'Bez zmeny',
+        'TRIGGERED' => 'Zaznamenaná udalosť',
+    ],
     'color_classes' => [
         'temperature-card' => 'Oranžová téma',
         'humidity-card' => 'Modrá téma',

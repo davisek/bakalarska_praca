@@ -21,7 +21,7 @@ class SensorUpdateRequest extends FormRequest
             'sensor_name' => ['required', 'string', 'max:50'],
             'type' => ['required', 'string', 'max:50', Rule::unique('sensors', 'type')->ignore($sensorId)],
             'display_name' => ['required', 'string', 'max:50', Rule::unique('sensors', 'display_name')->ignore($sensorId)],
-            'unit_of_measurement' => ['required', 'string', 'max:10'],
+            'unit_of_measurement' => ['nullable', 'string', 'max:10'],
             'is_output_binary' => ['required', 'boolean'],
             'color_class' => ['required', 'string', Rule::in(ColorClass::cases())],
             'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif', 'max:2048'],

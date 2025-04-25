@@ -7,12 +7,8 @@ use App\Http\Requests\Sensor\SensorStoreRequest;
 use App\Http\Requests\Sensor\SensorUpdateRequest;
 use App\Http\Resources\EnumResources\MetaDataColorClassResource;
 use App\Http\Resources\Sensor\SensorResource;
-use App\Models\NotificationSetting;
 use App\Models\Sensor;
-use App\Models\User;
-use App\Services\Interfaces\ISensorReadingService;
 use App\Services\Interfaces\ISensorService;
-use Illuminate\Support\Facades\Storage;
 
 class SensorController extends Controller
 {

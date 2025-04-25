@@ -9,6 +9,10 @@ return [
         'celsius' => 'Celsius',
         'fahrenheit' => 'Fahrenheit',
     ],
+    'measurements' => [
+        'SILENT' => 'Silent',
+        'TRIGGERED' => 'Triggered',
+    ],
     'color_classes' => [
         'temperature-card' => 'Orange Theme',
         'humidity-card' => 'Blue Theme',

@@ -25,7 +25,7 @@ Route::prefix('auth')->group(function () {
     Route::post('forgot-password/resend', [AuthController::class, 'resend']);
     Route::post('forgot-password/reset', [AuthController::class, 'reset']);
 
-    Route::group(['middleware' => ['jwt.verify']], function() {
+    Route::group(['middleware' => ['jwt.verify']], function () {
         Route::post('refresh', [AuthController::class, 'refresh']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('resend-code', [AuthController::class, 'resendVerificationCode']);
@@ -33,7 +33,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::group(['middleware' => ['jwt.verify']], function() {
+Route::group(['middleware' => ['jwt.verify']], function () {
     Route::prefix('settings')->group(function () {
         Route::get('', [SettingController::class, 'show']);
         Route::put('', [SettingController::class, 'update'])->middleware('email.verified');
@@ -57,7 +57,7 @@ Route::prefix('sensor-groups')->group(function () {
     Route::get('', [SensorGroupController::class, 'index']);
     Route::get('{sensorGroupId}', [SensorGroupController::class, 'show']);
 
-    Route::group(['middleware' => ['jwt.verify', 'is.admin']], function() {
+    Route::group(['middleware' => ['jwt.verify', 'is.admin']], function () {
         Route::post('{sensorGroupId}', [SensorGroupController::class, 'update']);
         Route::delete('{sensorGroupId}', [SensorGroupController::class, 'delete']);
         Route::post('', [SensorGroupController::class, 'create']);
@@ -67,7 +67,7 @@ Route::prefix('sensor-groups')->group(function () {
 Route::prefix('sensors')->group(function () {
     Route::get('meta-data', [SensorController::class, 'metaData']);
     Route::get('{sensorId}', [SensorController::class, 'show']);
-    Route::group(['middleware' => ['jwt.verify', 'is.admin']], function() {
+    Route::group(['middleware' => ['jwt.verify', 'is.admin']], function () {
         Route::post('{sensorId}', [SensorController::class, 'update']);
         Route::delete('{sensorId}', [SensorController::class, 'delete']);
         Route::post('', [SensorController::class, 'create']);
@@ -75,6 +75,6 @@ Route::prefix('sensors')->group(function () {
 });
 
 Route::prefix('logs')->group(function () {
-    Route::post('', [LogController::class, 'create']);
+    Route::post('', [LogController::class, 'create'])->middleware('sensor.admin.key');
     Route::get('', [LogController::class, 'index'])->middleware('is.admin');
 });
