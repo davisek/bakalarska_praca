@@ -5,6 +5,25 @@ namespace App\Http\Requests\Setting;
 use App\Models\NotificationSetting;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="UpdateSettingRequest",
+ *     required={"settings"},
+ *     @OA\Property(
+ *         property="settings",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             required={"id", "email_notification_allowed"},
+ *             @OA\Property(property="id", type="integer", description="Setting ID"),
+ *             @OA\Property(property="email_notification_allowed", type="boolean", description="Whether email notifications are enabled"),
+ *             @OA\Property(property="threshold", type="number", format="float", nullable=true, description="Notification threshold (required for non-binary sensors when notifications are enabled)"),
+ *             @OA\Property(property="cooldown", type="integer", nullable=true, description="Notification cooldown period in minutes (required when notifications are enabled)"),
+ *             @OA\Property(property="min_unit_diff", type="number", format="float", nullable=true, description="Minimum unit difference to trigger notification")
+ *         )
+ *     )
+ * )
+ */
 class UpdateSettingRequest extends FormRequest
 {
     public function authorize(): bool

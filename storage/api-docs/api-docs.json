@@ -1,0 +1,3150 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sensor Management API Documentation",
+        "description": "API Documentation for Sensor Management System",
+        "contact": {
+            "name": "",
+            "email": ""
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/logs": {
+            "get": {
+                "tags": [
+                    "Logs"
+                ],
+                "summary": "Get log entries",
+                "description": "Returns paginated list of log entries",
+                "operationId": "getLogs",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParameter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParameter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchParameter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortByParameter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortDirParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LogResourceCollection"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Logs"
+                ],
+                "summary": "Create a new log entry",
+                "description": "Creates a new log entry in the system",
+                "operationId": "createLog",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/LogCreateRequest"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Missing or invalid admin key"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sensorAdminKey": []
+                    }
+                ]
+            }
+        },
+        "/sensors/{sensorId}": {
+            "get": {
+                "tags": [
+                    "Sensors"
+                ],
+                "summary": "Get sensor details",
+                "description": "Returns details for a specific sensor",
+                "operationId": "getSensor",
+                "parameters": [
+                    {
+                        "name": "sensorId",
+                        "in": "path",
+                        "description": "ID of the sensor",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SensorResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sensor not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Sensors"
+                ],
+                "summary": "Update an existing sensor",
+                "description": "Updates a sensor in the system",
+                "operationId": "updateSensor",
+                "parameters": [
+                    {
+                        "name": "sensorId",
+                        "in": "path",
+                        "description": "ID of the sensor to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Sensor data",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorUpdateRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    },
+                    "404": {
+                        "description": "Sensor not found"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Sensors"
+                ],
+                "summary": "Delete a sensor",
+                "description": "Deletes a sensor from the system",
+                "operationId": "deleteSensor",
+                "parameters": [
+                    {
+                        "name": "sensorId",
+                        "in": "path",
+                        "description": "ID of the sensor to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    },
+                    "404": {
+                        "description": "Sensor not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sensors": {
+            "post": {
+                "tags": [
+                    "Sensors"
+                ],
+                "summary": "Create a new sensor",
+                "description": "Creates a new sensor in the system",
+                "operationId": "createSensor",
+                "requestBody": {
+                    "description": "Sensor data",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorStoreRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sensors/meta-data": {
+            "get": {
+                "tags": [
+                    "Sensors"
+                ],
+                "summary": "Get sensor metadata",
+                "description": "Returns metadata for sensors, including color classes",
+                "operationId": "getSensorMetaData",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "color_classes": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/EnumResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sensor-groups": {
+            "get": {
+                "tags": [
+                    "Sensor Groups"
+                ],
+                "summary": "Get all sensor groups",
+                "description": "Returns a list of all sensor groups with their sensors",
+                "operationId": "getSensorGroups",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SensorLinksResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Sensor Groups"
+                ],
+                "summary": "Create a new sensor group",
+                "description": "Creates a new sensor group in the system",
+                "operationId": "createSensorGroup",
+                "requestBody": {
+                    "description": "Sensor group data",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorGroupStoreRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorGroupStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sensor-groups/{sensorGroupId}": {
+            "get": {
+                "tags": [
+                    "Sensor Groups"
+                ],
+                "summary": "Get sensor group details",
+                "description": "Returns details for a specific sensor group",
+                "operationId": "getSensorGroup",
+                "parameters": [
+                    {
+                        "name": "sensorGroupId",
+                        "in": "path",
+                        "description": "ID of the sensor group",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SensorLinksResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sensor group not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Sensor Groups"
+                ],
+                "summary": "Update an existing sensor group",
+                "description": "Updates a sensor group in the system",
+                "operationId": "updateSensorGroup",
+                "parameters": [
+                    {
+                        "name": "sensorGroupId",
+                        "in": "path",
+                        "description": "ID of the sensor group to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Sensor group data",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorGroupUpdateRequest"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorGroupUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    },
+                    "404": {
+                        "description": "Sensor group not found"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Sensor Groups"
+                ],
+                "summary": "Delete a sensor group",
+                "description": "Deletes a sensor group from the system",
+                "operationId": "deleteSensorGroup",
+                "parameters": [
+                    {
+                        "name": "sensorGroupId",
+                        "in": "path",
+                        "description": "ID of the sensor group to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    },
+                    "404": {
+                        "description": "Sensor group not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sensor-readings/{sensor}": {
+            "get": {
+                "tags": [
+                    "Sensor Readings"
+                ],
+                "summary": "Get latest sensor reading",
+                "description": "Returns the latest reading for a specific sensor",
+                "operationId": "getLatestSensorReading",
+                "parameters": [
+                    {
+                        "name": "sensor",
+                        "in": "path",
+                        "description": "Sensor identifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SensorReadingResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sensor not found"
+                    }
+                }
+            }
+        },
+        "/sensor-readings/collection/{sensor}": {
+            "get": {
+                "tags": [
+                    "Sensor Readings"
+                ],
+                "summary": "Get sensor readings collection",
+                "description": "Returns a collection of readings for a specific sensor within a time range, limited to 40 points",
+                "operationId": "getSensorReadingsCollection",
+                "parameters": [
+                    {
+                        "name": "sensor",
+                        "in": "path",
+                        "description": "Sensor identifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Start date for readings (defaults to 1970-01-01)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "End date for readings (defaults to current time)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SensorReadingResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sensor not found"
+                    }
+                }
+            }
+        },
+        "/sensor-readings/collection/{sensor}/raw": {
+            "get": {
+                "tags": [
+                    "Sensor Readings"
+                ],
+                "summary": "Get raw sensor readings data",
+                "description": "Returns raw paginated data for a specific sensor within a time range",
+                "operationId": "getRawSensorReadings",
+                "parameters": [
+                    {
+                        "name": "sensor",
+                        "in": "path",
+                        "description": "Sensor identifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Start date for readings",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "End date for readings",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "value",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_dir",
+                        "in": "query",
+                        "description": "Sort direction",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SensorReadingResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string"
+                                                },
+                                                "last": {
+                                                    "type": "string"
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "from": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "path": {
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "to": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sensor not found"
+                    }
+                }
+            }
+        },
+        "/sensor-readings/collection/{sensor}/download": {
+            "get": {
+                "tags": [
+                    "Sensor Readings"
+                ],
+                "summary": "Download sensor readings as CSV",
+                "description": "Generates and downloads a CSV file with readings for a specific sensor within a time range",
+                "operationId": "downloadSensorReadingsCsv",
+                "parameters": [
+                    {
+                        "name": "sensor",
+                        "in": "path",
+                        "description": "Sensor identifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "Start date for readings",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "End date for readings",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CSV file download",
+                        "content": {
+                            "text/csv": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Sensor not found"
+                    }
+                }
+            }
+        },
+        "/sensor-readings": {
+            "post": {
+                "tags": [
+                    "Sensor Readings"
+                ],
+                "summary": "Create a new sensor reading",
+                "description": "Records a new reading for a specific sensor",
+                "operationId": "createSensorReading",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorReadingCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sensor reading successfully recorded!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Missing or invalid admin key"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sensorAdminKey": []
+                    }
+                ]
+            }
+        },
+        "/settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get user notification settings",
+                "description": "Returns the current user's notification settings",
+                "operationId": "getUserSettings",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SettingResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Update user notification settings",
+                "description": "Updates the current user's notification settings",
+                "operationId": "updateUserSettings",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSettingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Settings updated successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Email not verified"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "description": "Creates a new user account in the system",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful registration",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registration successful"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        },
+                                        "token": {
+                                            "description": "JWT access token",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login user",
+                "description": "Authenticates a user and returns a JWT token",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        },
+                                        "token": {
+                                            "description": "JWT access token",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Login failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login failed. Invalid credentials."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout user",
+                "description": "Logs out a user by invalidating their JWT token",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/resend-code": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Resend verification code",
+                "description": "Resends the email verification code to the user's email",
+                "operationId": "resendVerificationCode",
+                "responses": {
+                    "200": {
+                        "description": "Verification code resent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Verification code resent"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Already verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email already verified"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/verify-email": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify email",
+                "description": "Verifies user's email using the provided verification code",
+                "operationId": "verifyEmail",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailVerificationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email verification response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your email has been successfully verified."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Verification failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The code is invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "verification_code": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The code is invalid."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh JWT token",
+                "description": "Refreshes the JWT token for the authenticated user",
+                "operationId": "refreshToken",
+                "responses": {
+                    "200": {
+                        "description": "Successful token refresh",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        },
+                                        "token": {
+                                            "description": "New JWT access token",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Request password reset",
+                "description": "Sends a password reset code to the user's email",
+                "operationId": "requestPasswordReset",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset email sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset email has been sent."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/forgot-password/resend": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Resend password reset code",
+                "description": "Resends the password reset code to the user's email",
+                "operationId": "resendPasswordResetCode",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset email sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset email sent"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/forgot-password/reset": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset password",
+                "description": "Resets the user's password using the verification code",
+                "operationId": "resetPassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Reset successful"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        },
+                                        "token": {
+                                            "description": "JWT access token",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Verification failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Verification failed"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Verification failed"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/locale": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get localization metadata",
+                "description": "Returns available locales for the application",
+                "operationId": "getLocalizationMetadata",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "locales": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/EnumResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get users list",
+                "description": "Returns a paginated list of users (admin only)",
+                "operationId": "getUsers",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/PageParameter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PerPageParameter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SearchParameter"
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "name",
+                                "surname",
+                                "email",
+                                "email_verified_at",
+                                "is_admin",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/SortDirParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/UserResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string"
+                                                },
+                                                "last": {
+                                                    "type": "string"
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "from": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "path": {
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "to": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get current user details",
+                "description": "Returns the authenticated user's details",
+                "operationId": "getCurrentUser",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user profile",
+                "description": "Updates the authenticated user's profile information",
+                "operationId": "updateUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/change-password": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Change user password",
+                "description": "Changes the authenticated user's password",
+                "operationId": "changePassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your password has been updated successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Password validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The current password does not match your current password."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "current_password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The current password does not match your current password."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/statistics": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get system statistics",
+                "description": "Returns system statistics (admin only)",
+                "operationId": "getStatistics",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatisticsResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{userId}": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete user",
+                "description": "Deletes a user from the system (admin only)",
+                "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Generate admin authentication key",
+                "description": "Generates an authentication key for admin actions (admin only)",
+                "operationId": "generateAuthKey",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Created successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "auth_key": {
+                                                    "description": "Generated authentication key",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin access required"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LogRequest": {
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "description": "Log message",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "LogSearchRequest": {
+                "properties": {
+                    "page": {
+                        "description": "Page number",
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "per_page": {
+                        "description": "Number of items per page",
+                        "type": "integer",
+                        "maximum": 100,
+                        "minimum": 1
+                    },
+                    "search": {
+                        "description": "Search term",
+                        "type": "string"
+                    },
+                    "sort_by": {
+                        "description": "Field to sort by",
+                        "type": "string",
+                        "enum": [
+                            "created_at"
+                        ]
+                    },
+                    "sort_dir": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "SensorStoreRequest": {
+                "required": [
+                    "sensor_name",
+                    "type",
+                    "display_name",
+                    "is_output_binary",
+                    "color_class",
+                    "sensor_group_id"
+                ],
+                "properties": {
+                    "sensor_name": {
+                        "description": "Name of the sensor",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "type": {
+                        "description": "Type identifier of the sensor",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "display_name": {
+                        "description": "Display name of the sensor",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "unit_of_measurement": {
+                        "description": "Unit of measurement for sensor readings",
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "is_output_binary": {
+                        "description": "Whether sensor output is binary",
+                        "type": "boolean"
+                    },
+                    "color_class": {
+                        "description": "CSS color class for the sensor",
+                        "type": "string"
+                    },
+                    "image": {
+                        "description": "Sensor image file",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "icon": {
+                        "description": "Sensor icon file",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "sensor_group_id": {
+                        "description": "ID of the sensor group",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorUpdateRequest": {
+                "required": [
+                    "sensor_name",
+                    "type",
+                    "display_name",
+                    "is_output_binary",
+                    "color_class",
+                    "sensor_group_id"
+                ],
+                "properties": {
+                    "sensor_name": {
+                        "description": "Name of the sensor",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "type": {
+                        "description": "Type identifier of the sensor",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "display_name": {
+                        "description": "Display name of the sensor",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "unit_of_measurement": {
+                        "description": "Unit of measurement for sensor readings",
+                        "type": "string",
+                        "maxLength": 10,
+                        "nullable": true
+                    },
+                    "is_output_binary": {
+                        "description": "Whether sensor output is binary",
+                        "type": "boolean"
+                    },
+                    "color_class": {
+                        "description": "CSS color class for the sensor",
+                        "type": "string"
+                    },
+                    "image": {
+                        "description": "Sensor image file",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "icon": {
+                        "description": "Sensor icon file",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "sensor_group_id": {
+                        "description": "ID of the sensor group",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorGroupStoreRequest": {
+                "required": [
+                    "group_name",
+                    "group_value",
+                    "image"
+                ],
+                "properties": {
+                    "group_name": {
+                        "description": "Name of the sensor group",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "group_value": {
+                        "description": "Value identifier of the sensor group",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "image": {
+                        "description": "Sensor group image file",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorGroupUpdateRequest": {
+                "required": [
+                    "group_name",
+                    "group_value"
+                ],
+                "properties": {
+                    "group_name": {
+                        "description": "Name of the sensor group",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "group_value": {
+                        "description": "Value identifier of the sensor group",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "image": {
+                        "description": "Sensor group image file",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorCsvRequestQuery": {
+                "properties": {
+                    "from": {
+                        "description": "Start date for readings",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "to": {
+                        "description": "End date for readings",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorRawRequestQuery": {
+                "properties": {
+                    "from": {
+                        "description": "Start date for readings",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "to": {
+                        "description": "End date for readings",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "page": {
+                        "description": "Page number",
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "per_page": {
+                        "description": "Number of items per page",
+                        "type": "integer",
+                        "maximum": 100,
+                        "minimum": 1
+                    },
+                    "sort_by": {
+                        "description": "Field to sort by",
+                        "type": "string",
+                        "enum": [
+                            "value",
+                            "created_at"
+                        ]
+                    },
+                    "sort_dir": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "SensorReadingCreateRequest": {
+                "required": [
+                    "sensor_name",
+                    "value"
+                ],
+                "properties": {
+                    "sensor_name": {
+                        "description": "Name of the sensor",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "value": {
+                        "description": "Reading value",
+                        "type": "number",
+                        "format": "float"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorRequestQuery": {
+                "properties": {
+                    "from": {
+                        "description": "Start date for readings",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "to": {
+                        "description": "End date for readings",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateSettingRequest": {
+                "required": [
+                    "settings"
+                ],
+                "properties": {
+                    "settings": {
+                        "type": "array",
+                        "items": {
+                            "required": [
+                                "id",
+                                "email_notification_allowed"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "description": "Setting ID",
+                                    "type": "integer"
+                                },
+                                "email_notification_allowed": {
+                                    "description": "Whether email notifications are enabled",
+                                    "type": "boolean"
+                                },
+                                "threshold": {
+                                    "description": "Notification threshold (required for non-binary sensors when notifications are enabled)",
+                                    "type": "number",
+                                    "format": "float",
+                                    "nullable": true
+                                },
+                                "cooldown": {
+                                    "description": "Notification cooldown period in minutes (required when notifications are enabled)",
+                                    "type": "integer",
+                                    "nullable": true
+                                },
+                                "min_unit_diff": {
+                                    "description": "Minimum unit difference to trigger notification",
+                                    "type": "number",
+                                    "format": "float",
+                                    "nullable": true
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "EmailVerificationRequest": {
+                "required": [
+                    "verification_code"
+                ],
+                "properties": {
+                    "verification_code": {
+                        "description": "Email verification code",
+                        "type": "string",
+                        "maxLength": 5,
+                        "minLength": 5
+                    }
+                },
+                "type": "object"
+            },
+            "ForgotPasswordRequest": {
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "password": {
+                        "description": "User's password",
+                        "type": "string",
+                        "format": "password",
+                        "maxLength": 20,
+                        "minLength": 6
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "name",
+                    "surname",
+                    "email",
+                    "password",
+                    "password_confirmation",
+                    "locale"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "User's first name",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "surname": {
+                        "description": "User's last name",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "password": {
+                        "description": "User's password",
+                        "type": "string",
+                        "format": "password",
+                        "maxLength": 20,
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "description": "Password confirmation",
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "locale": {
+                        "description": "User's preferred locale",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ResetPasswordRequest": {
+                "required": [
+                    "email",
+                    "code",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "code": {
+                        "description": "Password reset verification code",
+                        "type": "string",
+                        "maxLength": 5,
+                        "minLength": 5
+                    },
+                    "password": {
+                        "description": "New password",
+                        "type": "string",
+                        "format": "password",
+                        "maxLength": 20,
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "description": "New password confirmation",
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdatePasswordRequest": {
+                "required": [
+                    "current_password",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "current_password": {
+                        "description": "Current password",
+                        "type": "string",
+                        "format": "password",
+                        "maxLength": 20,
+                        "minLength": 8
+                    },
+                    "password": {
+                        "description": "New password",
+                        "type": "string",
+                        "format": "password",
+                        "maxLength": 20,
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "description": "New password confirmation",
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateUserRequest": {
+                "required": [
+                    "name",
+                    "surname",
+                    "email",
+                    "locale",
+                    "dark_mode"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "User's first name",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "surname": {
+                        "description": "User's last name",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "locale": {
+                        "description": "User's preferred locale",
+                        "type": "string"
+                    },
+                    "dark_mode": {
+                        "description": "Whether dark mode is enabled",
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "UserSearchRequestQuery": {
+                "properties": {
+                    "page": {
+                        "description": "Page number",
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "per_page": {
+                        "description": "Number of items per page",
+                        "type": "integer",
+                        "maximum": 100,
+                        "minimum": 1
+                    },
+                    "search": {
+                        "description": "Search term",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "sort_by": {
+                        "description": "Field to sort by",
+                        "type": "string",
+                        "enum": [
+                            "name",
+                            "surname",
+                            "email",
+                            "email_verified_at",
+                            "is_admin",
+                            "created_at"
+                        ]
+                    },
+                    "sort_dir": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "EnumResource": {
+                "properties": {
+                    "value": {
+                        "description": "Enum value",
+                        "type": "string"
+                    },
+                    "label": {
+                        "description": "Human-readable label",
+                        "type": "string"
+                    },
+                    "symbol": {
+                        "description": "Symbol representation",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "LogResource": {
+                "properties": {
+                    "message": {
+                        "description": "Log message",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorResource": {
+                "properties": {
+                    "id": {
+                        "description": "Sensor ID",
+                        "type": "integer"
+                    },
+                    "sensor_name": {
+                        "description": "Name of the sensor",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Type identifier of the sensor",
+                        "type": "string"
+                    },
+                    "display_name": {
+                        "description": "Display name of the sensor",
+                        "type": "string"
+                    },
+                    "unit_of_measurement": {
+                        "description": "Unit of measurement for sensor readings",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_output_binary": {
+                        "description": "Whether sensor output is binary",
+                        "type": "boolean"
+                    },
+                    "image_path": {
+                        "description": "Path to sensor image",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "icon_path": {
+                        "description": "Path to sensor icon",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "color_class": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/EnumResource"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "group_name": {
+                        "description": "Name of the sensor group",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "SensorLinksResource": {
+                "properties": {
+                    "id": {
+                        "description": "Sensor group ID",
+                        "type": "integer"
+                    },
+                    "group_name": {
+                        "description": "Name of the sensor group",
+                        "type": "string"
+                    },
+                    "group_value": {
+                        "description": "Value identifier of the sensor group",
+                        "type": "string"
+                    },
+                    "image_path": {
+                        "description": "Path to sensor group image",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sensors": {
+                        "description": "Sensors in this group",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SensorResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "SensorReadingResource": {
+                "properties": {
+                    "value": {
+                        "description": "Sensor reading value",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "symbol": {
+                        "description": "Unit of measurement symbol",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when reading was recorded",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "SettingResource": {
+                "properties": {
+                    "id": {
+                        "description": "Setting ID",
+                        "type": "integer"
+                    },
+                    "email_notification_allowed": {
+                        "description": "Whether email notifications are enabled",
+                        "type": "boolean"
+                    },
+                    "threshold": {
+                        "description": "Notification threshold value",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "cooldown": {
+                        "description": "Notification cooldown period in minutes",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "min_unit_diff": {
+                        "description": "Minimum unit difference to trigger notification",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "sensor": {
+                        "$ref": "#/components/schemas/SensorResource"
+                    }
+                },
+                "type": "object"
+            },
+            "StatisticsResource": {
+                "properties": {
+                    "total_users": {
+                        "description": "Total number of users",
+                        "type": "integer"
+                    },
+                    "admin_users": {
+                        "description": "Number of admin users",
+                        "type": "integer"
+                    },
+                    "total_sensors": {
+                        "description": "Total number of sensors",
+                        "type": "integer"
+                    },
+                    "total_logs": {
+                        "description": "Total number of logs",
+                        "type": "integer"
+                    },
+                    "new_users_today": {
+                        "description": "Number of new users today",
+                        "type": "integer"
+                    },
+                    "new_readings_today": {
+                        "description": "Number of new sensor readings today",
+                        "type": "integer"
+                    },
+                    "new_logs_today": {
+                        "description": "Number of new logs today",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "User's first name",
+                        "type": "string"
+                    },
+                    "surname": {
+                        "description": "User's last name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "email_verified_at": {
+                        "description": "Email verification timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "locale": {
+                        "$ref": "#/components/schemas/EnumResource"
+                    },
+                    "is_admin": {
+                        "description": "Whether user has admin privileges",
+                        "type": "boolean"
+                    },
+                    "dark_mode": {
+                        "description": "Whether dark mode is enabled",
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "description": "Account creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "LogResourceCollection": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LogResource"
+                        }
+                    },
+                    "links": {
+                        "properties": {
+                            "first": {
+                                "type": "string"
+                            },
+                            "last": {
+                                "type": "string"
+                            },
+                            "prev": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "next": {
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "properties": {
+                            "current_page": {
+                                "type": "integer"
+                            },
+                            "from": {
+                                "type": "integer"
+                            },
+                            "last_page": {
+                                "type": "integer"
+                            },
+                            "path": {
+                                "type": "string"
+                            },
+                            "per_page": {
+                                "type": "integer"
+                            },
+                            "to": {
+                                "type": "integer"
+                            },
+                            "total": {
+                                "type": "integer"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessResponse": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Created successfully"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationErrorResponse": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "example": "error"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "The given data was invalid."
+                    },
+                    "errors": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "parameters": {
+            "PageParameter": {
+                "name": "page",
+                "in": "query",
+                "description": "Page number",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            },
+            "PerPageParameter": {
+                "name": "per_page",
+                "in": "query",
+                "description": "Number of items per page",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 1
+                }
+            },
+            "SearchParameter": {
+                "name": "search",
+                "in": "query",
+                "description": "Search term",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "SortByParameter": {
+                "name": "sort_by",
+                "in": "query",
+                "description": "Field to sort by",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "SortDirParameter": {
+                "name": "sort_dir",
+                "in": "query",
+                "description": "Sort direction",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "asc",
+                        "desc"
+                    ]
+                }
+            }
+        },
+        "requestBodies": {
+            "LogCreateRequest": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/LogRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
+            "sensorAdminKey": {
+                "type": "apiKey",
+                "name": "X-Admin-Token",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Logs",
+            "description": "API Endpoints for managing logs"
+        },
+        {
+            "name": "Sensors",
+            "description": "API Endpoints for managing sensors"
+        },
+        {
+            "name": "Sensor Groups",
+            "description": "API Endpoints for managing sensor groups"
+        },
+        {
+            "name": "Sensor Readings",
+            "description": "API Endpoints for managing sensor readings"
+        },
+        {
+            "name": "Settings",
+            "description": "API Endpoints for managing user notification settings"
+        },
+        {
+            "name": "Authentication",
+            "description": "API Endpoints for user authentication and registration"
+        },
+        {
+            "name": "Users",
+            "description": "API Endpoints for managing users"
+        }
+    ]
+}

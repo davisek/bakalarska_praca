@@ -5,6 +5,15 @@ namespace App\Http\Requests\SensorGroup;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="SensorGroupStoreRequest",
+ *     required={"group_name", "group_value", "image"},
+ *     @OA\Property(property="group_name", type="string", maxLength=50, description="Name of the sensor group"),
+ *     @OA\Property(property="group_value", type="string", maxLength=50, description="Value identifier of the sensor group"),
+ *     @OA\Property(property="image", type="string", format="binary", description="Sensor group image file")
+ * )
+ */
 class SensorGroupStoreRequest extends FormRequest
 {
     public function authorize(): bool

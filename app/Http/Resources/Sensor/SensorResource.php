@@ -8,6 +8,25 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Laravel\Sanctum\PersonalAccessToken;
 
+/**
+ * @OA\Schema(
+ *     schema="SensorResource",
+ *     @OA\Property(property="id", type="integer", description="Sensor ID"),
+ *     @OA\Property(property="sensor_name", type="string", description="Name of the sensor"),
+ *     @OA\Property(property="type", type="string", description="Type identifier of the sensor"),
+ *     @OA\Property(property="display_name", type="string", description="Display name of the sensor"),
+ *     @OA\Property(property="unit_of_measurement", type="string", nullable=true, description="Unit of measurement for sensor readings"),
+ *     @OA\Property(property="is_output_binary", type="boolean", description="Whether sensor output is binary"),
+ *     @OA\Property(property="image_path", type="string", nullable=true, description="Path to sensor image"),
+ *     @OA\Property(property="icon_path", type="string", nullable=true, description="Path to sensor icon"),
+ *     @OA\Property(
+ *         property="color_class",
+ *         nullable=true,
+ *         ref="#/components/schemas/EnumResource"
+ *     ),
+ *     @OA\Property(property="group_name", type="string", description="Name of the sensor group")
+ * )
+ */
 class SensorResource extends JsonResource
 {
     public function toArray(Request $request): array

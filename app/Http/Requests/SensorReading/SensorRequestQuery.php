@@ -4,6 +4,13 @@ namespace App\Http\Requests\SensorReading;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="SensorRequestQuery",
+ *     @OA\Property(property="from", type="string", format="date-time", description="Start date for readings"),
+ *     @OA\Property(property="to", type="string", format="date-time", description="End date for readings")
+ * )
+ */
 class SensorRequestQuery extends FormRequest
 {
     public function authorize(): bool

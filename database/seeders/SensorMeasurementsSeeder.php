@@ -137,17 +137,6 @@ class SensorMeasurementsSeeder extends Seeder
         ]);
         Sensor::create([
             'sensor_name' => 'CJMCU-3935',
-            'type' => 'energy',
-            'display_name' => 'Energy',
-            'unit_of_measurement' => null,
-            'is_output_binary' => false,
-            'sensor_group_id' => $lighning->id,
-            'color_class' => ColorClass::LIGHT_CARD,
-            'image_path' => $this->storeImage($assetPathSensorImage, 'lightning-image.jpg'),
-            'icon_path' => $this->storeImage($assetPathSensorIcon, 'lightning.png'),
-        ]);
-        Sensor::create([
-            'sensor_name' => 'CJMCU-3935',
             'type' => 'noise',
             'display_name' => 'Noise',
             'unit_of_measurement' => null,

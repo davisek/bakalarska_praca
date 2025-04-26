@@ -24,6 +24,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
+/**
+ * @OA\Tag(
+ *     name="Authentication",
+ *     description="API Endpoints for user authentication and registration"
+ * )
+ */
 class AuthController extends Controller
 {
     protected readonly IAuthService $authService;
@@ -33,6 +39,33 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
+    /**
+     * Register a new user
+     *
+     * @OA\Post(
+     *     path="/auth/register",
+     *     operationId="registerUser",
+     *     tags={"Authentication"},
+     *     summary="Register a new user",
+     *     description="Creates a new user account in the system",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/RegisterRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful registration",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Registration successful"),
+     *             @OA\Property(property="user", ref="#/components/schemas/UserResource"),
+     *             @OA\Property(property="token", type="string", description="JWT access token")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Validation error", @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse"))
+     * )
+     */
     public function register(RegisterRequest $request)
     {
         $registerData = RegisterData::from($request->validated());
@@ -47,6 +80,42 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Login user
+     *
+     * @OA\Post(
+     *     path="/auth/login",
+     *     operationId="loginUser",
+     *     tags={"Authentication"},
+     *     summary="Login user",
+     *     description="Authenticates a user and returns a JWT token",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/LoginRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful login",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Login successful"),
+     *             @OA\Property(property="user", ref="#/components/schemas/UserResource"),
+     *             @OA\Property(property="token", type="string", description="JWT access token")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Login failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Login failed. Invalid credentials.")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Validation error", @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse"))
+     * )
+     */
     public function login(LoginRequest $request)
     {
         $loginData = LoginData::from($request->validated());
@@ -67,6 +136,28 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logout user
+     *
+     * @OA\Post(
+     *     path="/auth/logout",
+     *     operationId="logoutUser",
+     *     tags={"Authentication"},
+     *     summary="Logout user",
+     *     description="Logs out a user by invalidating their JWT token",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful logout",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Logout successful")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized")
+     * )
+     */
     public function logout(Request $request)
     {
         $this->authService->logout($request);
@@ -77,6 +168,37 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Resend verification code
+     *
+     * @OA\Post(
+     *     path="/auth/resend-code",
+     *     operationId="resendVerificationCode",
+     *     tags={"Authentication"},
+     *     summary="Resend verification code",
+     *     description="Resends the email verification code to the user's email",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Verification code resent",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Verification code resent")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Already verified",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Email already verified")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized")
+     * )
+     */
     public function resendVerificationCode()
     {
         if (!is_null(Auth::user()->email_verified_at)) {
@@ -94,6 +216,50 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Verify email
+     *
+     * @OA\Post(
+     *     path="/auth/verify-email",
+     *     operationId="verifyEmail",
+     *     tags={"Authentication"},
+     *     summary="Verify email",
+     *     description="Verifies user's email using the provided verification code",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/EmailVerificationRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email verification response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Your email has been successfully verified.")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Verification failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="The code is invalid."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="verification_code",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="The code is invalid.")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function verifyEmail(EmailVerificationRequest $request)
     {
         $verificationData = VerificationData::from($request->validated());
@@ -106,6 +272,30 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Refresh token
+     *
+     * @OA\Post(
+     *     path="/auth/refresh",
+     *     operationId="refreshToken",
+     *     tags={"Authentication"},
+     *     summary="Refresh JWT token",
+     *     description="Refreshes the JWT token for the authenticated user",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful token refresh",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Login successful"),
+     *             @OA\Property(property="user", ref="#/components/schemas/UserResource"),
+     *             @OA\Property(property="token", type="string", description="New JWT access token")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized")
+     * )
+     */
     public function refresh()
     {
         $token = $this->authService->refresh();
@@ -122,6 +312,31 @@ class AuthController extends Controller
         return null;
     }
 
+    /**
+     * Request password reset
+     *
+     * @OA\Post(
+     *     path="/auth/forgot-password",
+     *     operationId="requestPasswordReset",
+     *     tags={"Authentication"},
+     *     summary="Request password reset",
+     *     description="Sends a password reset code to the user's email",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ForgotPasswordRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset email sent",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Password reset email has been sent.")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Validation error", @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse"))
+     * )
+     */
     public function forgot(ForgotPasswordRequest $request)
     {
         $result = $this->authService->getUserByLogin($request->validated()['email']);
@@ -139,6 +354,31 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Resend password reset code
+     *
+     * @OA\Post(
+     *     path="/auth/forgot-password/resend",
+     *     operationId="resendPasswordResetCode",
+     *     tags={"Authentication"},
+     *     summary="Resend password reset code",
+     *     description="Resends the password reset code to the user's email",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ForgotPasswordRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset email sent",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Password reset email sent")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Validation error", @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse"))
+     * )
+     */
     public function resend(ForgotPasswordRequest $request)
     {
         $result = $this->authService->getUserByLogin($request->validated()['email']);
@@ -156,6 +396,50 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Reset password
+     *
+     * @OA\Post(
+     *     path="/auth/forgot-password/reset",
+     *     operationId="resetPassword",
+     *     tags={"Authentication"},
+     *     summary="Reset password",
+     *     description="Resets the user's password using the verification code",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ResetPasswordRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset successful",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Reset successful"),
+     *             @OA\Property(property="user", ref="#/components/schemas/UserResource"),
+     *             @OA\Property(property="token", type="string", description="JWT access token")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Verification failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="type", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Verification failed"),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="code",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="Verification failed")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function reset(ResetPasswordRequest $request)
     {
         $data = $request->validated();
@@ -187,6 +471,29 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Get localization metadata
+     *
+     * @OA\Get(
+     *     path="/auth/locale",
+     *     operationId="getLocalizationMetadata",
+     *     tags={"Authentication"},
+     *     summary="Get localization metadata",
+     *     description="Returns available locales for the application",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="locales",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/EnumResource")
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function metaData()
     {
         return new MetaDataResource(null);
