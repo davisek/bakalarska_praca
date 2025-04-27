@@ -20,7 +20,7 @@ class AuthService implements IAuthService
     public function register(RegisterData $registerData): array
     {
         $hash = Str::random(150);
-        $verification_code = (string)rand(10000, 99999);
+        $verification_code = (string) rand(10000, 99999);
 
         $user = User::create([
             'name' => $registerData->name,
@@ -74,7 +74,7 @@ class AuthService implements IAuthService
         $new_hash = Str::random(150);
         $verification_code = rand(10000, 99999);
         Cache::store("file")->put($new_hash, [
-            "verification_code" => $verification_code ,
+            "verification_code" => $verification_code,
         ], now()->addWeek());
 
         $user->hash = $new_hash;

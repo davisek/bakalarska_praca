@@ -15,7 +15,7 @@ class SensorService implements ISensorService
     {
         $data = $request->validated();
 
-        $sensor = Sensor::create([$data]);
+        $sensor = Sensor::create($data);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('images/sensors', 'public');

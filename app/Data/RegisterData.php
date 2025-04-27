@@ -11,7 +11,7 @@ class RegisterData extends Data
         public string $email,
         public string $password,
         public string $locale,
-        public bool $dark_mode,
-    ) {}
+    ) {
+    }
 }
 
