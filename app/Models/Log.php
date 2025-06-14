@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @Model Log
  * @property int $id
  * @property string $message
- * @property Carbon|Null $created_at
- * @property Carbon|Null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Log extends Model
 {

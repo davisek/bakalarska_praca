@@ -5,12 +5,9 @@ namespace App\Http\Controllers\SensorGroup;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SensorGroup\SensorGroupStoreRequest;
 use App\Http\Requests\SensorGroup\SensorGroupUpdateRequest;
-use App\Http\Resources\EnumResources\MetaDataResource;
 use App\Http\Resources\SensorGroup\SensorLinksResource;
-use App\Models\Sensor;
 use App\Models\SensorGroup;
 use App\Services\Interfaces\ISensorGroupService;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @OA\Tag(

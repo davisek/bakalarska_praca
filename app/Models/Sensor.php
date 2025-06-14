@@ -22,8 +22,8 @@ use Illuminate\Support\Collection;
  * @property string $icon_path
  * @property ColorClass $color_class
  * @property int $sensor_group_id
- * @property Carbon|Null $created_at
- * @property Carbon|Null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property Collection|Measurement[] $measurements
  * @property SensorGroup $sensorGroup
  */

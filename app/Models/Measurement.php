@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $sensor_id
  * @property float $value
- * @property Carbon|Null $created_at
- * @property Carbon|Null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property Sensor $sensor
  */
 class Measurement extends Model

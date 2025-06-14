@@ -18,15 +18,15 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @property string $name
  * @property string $surname
  * @property string $email
- * @property Carbon|Null $email_verified_at
+ * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string $hash
  * @property LocaleEnum $locale
  * @property boolean $is_admin
  * @property boolean $dark_mode
  * @property string $auth_key
- * @property Carbon|Null $created_at
- * @property Carbon|Null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property Collection|NotificationSetting[] $notificationSettings
  */
 class User extends Authenticatable implements JWTSubject

@@ -103,7 +103,7 @@ class SensorReadingController extends Controller
     {
         $validated = $request->validated();
         $to = isset($validated['to'])
-            ? Carbon::parse($validated['to'])
+            ? Carbon::parse($validated['to'], 'Europe/Bratislava')
             : Carbon::now('Europe/Bratislava');
         $from = isset($validated['from'])
             ? Carbon::parse($validated['from'], 'Europe/Bratislava')

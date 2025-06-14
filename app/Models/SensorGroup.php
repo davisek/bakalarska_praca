@@ -14,8 +14,8 @@ use Illuminate\Support\Collection;
  * @property string $group_name
  * @property string $group_value
  * @property string $image_path
- * @property Carbon|Null $created_at
- * @property Carbon|Null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property Collection|Sensor[] $sensors
  */
 class SensorGroup extends Model
